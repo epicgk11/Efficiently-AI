@@ -1,0 +1,6 @@
+django
+jupyterlab
+djangorestframework
+groq
+langchain-groq
+pymongo
