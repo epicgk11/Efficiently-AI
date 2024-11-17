@@ -13,9 +13,11 @@ def createTaskView(request):
             data = json.loads(request.body)
         else:
             data = request.POST.dict()
+            print(data)
             data['tags'] = request.POST.getlist('tags')
             steps_raw = request.POST.get('steps', '[]')
             data['steps'] = json.loads(steps_raw) if steps_raw else []
+            print(data)
         taskId = createTask(data)
         return JsonResponse({'message': 'Task created successfully', 'task_id': str(taskId)})
     
@@ -29,6 +31,7 @@ def updateTaskView(request, taskId):
             data = request.POST.dict()
             data['tags'] = request.POST.getlist('tags')
             steps_raw = request.POST.get('steps', '[]')
+            print(steps_raw)
             data['steps'] = json.loads(steps_raw) if steps_raw else []
         updateTask(ObjectId(taskId), data)
         return JsonResponse({"message": "Task Updation Successful"})
@@ -44,7 +47,6 @@ def getTaskView(request, taskId):
     if request.method == 'GET':
         task = getTask(ObjectId(taskId))
         return JsonResponse({'task': task})
-
 @csrf_exempt
 def listTasksView(request):
     if request.method == 'GET':

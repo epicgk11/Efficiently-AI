@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <title>Smart Task Manager - Edit Task</title>
+    <style>
+        @tailwind base;
+        @tailwind components;
+        @tailwind utilities;
+
+        body {
+            font-family: 'JetBrains Mono', monospace;
+        }
+    </style>
+</head>
+<body class="bg-white text-black min-h-screen">
+    <!-- Navbar -->
+    <nav class="bg-green-500 text-white py-4 shadow-lg">
+        <div class="container mx-auto flex justify-between items-center px-4">
+            <h1 class="text-xl font-bold">Smart Task Manager</h1>
+            <a href="{% url 'listtasks' %}" class="hover:underline">Home</a>
+        </div>
+    </nav>
+
+    <!-- Task Form -->
+    <div class="container mx-auto px-4 mt-6">
+        <h2 class="text-2xl font-bold text-green-700 mb-4">Edit Task</h2>
+        <form id="task-form" action="#" method="POST" class="bg-lime-green rounded-lg shadow p-6 space-y-4">
+            {% csrf_token %}
+            <!-- Task ID (Hidden) -->
+            <input type="hidden" name="task_id" value="{{ task.id }}">
+
+            <!-- Name -->
+            <div>
+                <label class="block font-bold text-green-800">Task Name</label>
+                <input type="text" name="name" value="{{ task.name }}" class="w-full border border-green-500 rounded-lg px-4 py-2 bg-white text-black">
+            </div>
+            <!-- Description -->
+            <div>
+                <label class="block font-bold text-green-800">Description</label>
+                <textarea name="description" class="w-full border border-green-500 rounded-lg px-4 py-2 bg-white text-black" rows="4">{{ task.description }}</textarea>
+            </div>
+            <!-- Due Date -->
+            <div>
+                <label class="block font-bold text-green-800">Due Date</label>
+                <input type="date" name="due_date" value="{{ task.due_date }}" class="w-full border border-green-500 rounded-lg px-4 py-2 bg-white text-black">
+            </div>
+            <!-- Tags -->
+            <div>
+                <label class="block font-bold text-green-800">Tags</label>
+                <input type="text" name="tags" value="{{ task.tags|join:', ' }}" class="w-full border border-green-500 rounded-lg px-4 py-2 bg-white text-black">
+            </div>
+            <!-- Resources -->
+            <div>
+                <label class="block font-bold text-green-800">Resources</label>
+                <textarea name="resources" class="w-full border border-green-500 rounded-lg px-4 py-2 bg-white text-black" rows="4">{{ task.resources }}</textarea>
+            </div>
+            <!-- Steps -->
+            <div>
+                <label class="block font-bold text-green-800">Steps</label>
+                <div id="steps-container" class="space-y-2">
+                    {% for step in task.steps %}
+                    <div class="flex items-center space-x-4">
+                        <input type="checkbox" name="step_completed[]" value="1" class="border-green-500 rounded" {% if step.completed %}checked{% endif %}>
+                        <input type="text" name="step_name[]" value="{{ step.name }}" class="flex-1 border border-green-500 rounded-lg px-4 py-2 bg-white text-black" placeholder="Step name">
+                        <input type="date" name="step_due_date[]" value="{{ step.due_date }}" class="border border-green-500 rounded-lg px-4 py-2 bg-white text-black">
+                        <button type="button" class="text-red-500 hover:underline">Remove</button>
+                    </div>
+                    {% endfor %}
+                </div>
+                <button id="add-step" type="button" class="text-sm text-green-600 hover:underline">+ Add Step</button>
+            </div>
+            <!-- Submit Button -->
+            <button type="submit" class="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg">Save Task</button>
+        </form>
+    </div>
+
+    <script>
+        const stepsContainer = document.getElementById('steps-container');
+        const addStepButton = document.getElementById('add-step');
+
+        // Add new step functionality
+        addStepButton.addEventListener('click', () => {
+            const stepTemplate = `
+                <div class="flex items-center space-x-4">
+                    <input type="checkbox" name="step_completed[]" value="1" class="border-green-500 rounded">
+                    <input type="text" name="step_name[]" class="flex-1 border border-green-500 rounded-lg px-4 py-2 bg-white text-black" placeholder="Step name">
+                    <input type="date" name="step_due_date[]" class="border border-green-500 rounded-lg px-4 py-2 bg-white text-black">
+                    <button type="button" class="text-red-500 hover:underline">Remove</button>
+                </div>
+            `;
+            stepsContainer.insertAdjacentHTML('beforeend', stepTemplate);
+        });
+
+        // Remove step functionality
+        stepsContainer.addEventListener('click', (e) => {
+            if (e.target.textContent === 'Remove') {
+                e.target.parentElement.remove();
+            }
+        });
+    </script>
+</body>
+</html>

@@ -15,11 +15,11 @@ def deleteTask(taskId):
 
 def getTask(taskId):
     task = tasksCollections.find_one({"_id":taskId})
-    task['_id'] = str(task['_id'])
+    task['id'] = str(task.pop("_id"))
     return task
 
 def listTasks():
     tasks = list(tasksCollections.find())
     for task in tasks:
-        task['_id'] = str(task["_id"])
+        task['id'] = str(task.pop("_id"))
     return tasks                                          

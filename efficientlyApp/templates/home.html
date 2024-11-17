@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <title>Efficiently AI - Home</title>
+    <style>
+        @tailwind base;
+        @tailwind components;
+        @tailwind utilities;
+
+        body {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .task-checkbox input:checked + .task-text {
+            text-decoration: line-through;
+            color: #888888;
+        }
+
+        .clickable-div {
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body class="bg-white text-black min-h-screen">
+    <!-- Navbar -->
+    <nav class="bg-green-500 text-white py-4 shadow-lg">
+        <div class="container mx-auto flex justify-between items-center px-4">
+            <h1 class="text-xl font-bold">Efficiently AI</h1>
+            <ul class="flex space-x-6">
+                <li><a href="/" class="hover:underline">Home</a></li>
+                <li><a href="{% url 'createtask' %}" class="hover:underline">Create New Task</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Filters Section -->
+    <div class="container mx-auto px-4 mt-6 flex justify-between items-center">
+        <h2 class="text-2xl font-bold text-green-700">Your Tasks</h2>
+        <div class="flex items-center gap-4">
+            <input type="text" placeholder="Search tasks..." class="border border-green-300 rounded-lg px-4 py-2 bg-white text-black">
+            <select class="border border-green-300 rounded-lg px-4 py-2 bg-white text-black">
+                <option value="">Filter by Tag</option>
+                <option value="work">Work</option>
+                <option value="personal">Personal</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Task List -->
+    <div class="container mx-auto px-4 mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {% for task in tasks %}
+        <a href="/app/update/{{ task.id }}/" class="block bg-lime-green border-2 border-green-700 rounded-lg shadow p-4 hover:shadow-lg transition clickable-div">
+            <form method="POST" action="/app/delete/{{ task.id }}/" class="flex items-center gap-2">
+                {% csrf_token %}
+                <input 
+                    type="checkbox" 
+                    name="completed" 
+                    value="1"
+                    class="task-checkbox border-green-500 rounded"
+                    onchange="this.form.submit();" 
+                    {% if task.completed %}checked{% endif %}>
+                <h3 class="task-text text-lg font-bold text-green-800">{{ task.name }}</h3>
+            </form>
+            <p class="text-sm text-gray-700 mt-2">{{ task.description }}</p>
+            <div class="flex justify-between items-center mt-4 text-sm text-gray-600">
+                <span>Due: {{ task.due_date }}</span>
+                {% if task.tags %}
+                <span class="bg-green-600 text-white px-2 py-1 rounded-full">{{ task.tags|join:", " }}</span>
+                {% endif %}
+            </div>
+        </a>
+        {% empty %}
+        <p class="text-gray-600 text-center col-span-full">No tasks found.</p>
+        {% endfor %}
+    </div>
+</body>
+</html>
