@@ -23,6 +23,15 @@
         .clickable-div {
             cursor: pointer;
         }
+
+        .tag {
+            background-color: #10c875;
+            color: white;
+            border-radius: 0.5rem;
+            padding: 0.2rem 0.5rem;
+            margin-right: 0.5rem;
+            display: inline-block;
+        }
     </style>
 </head>
 <body class="bg-white text-black min-h-screen">
@@ -31,7 +40,7 @@
         <div class="container mx-auto flex justify-between items-center px-4">
             <h1 class="text-xl font-bold">Efficiently AI</h1>
             <ul class="flex space-x-6">
-                <li><a href="/" class="hover:underline">Home</a></li>
+                <li><a href="{% url 'listtasks' %}" class="hover:underline">Home</a></li>
                 <li><a href="{% url 'createtask' %}" class="hover:underline">Create New Task</a></li>
             </ul>
         </div>
@@ -66,11 +75,13 @@
                 <h3 class="task-text text-lg font-bold text-green-800">{{ task.name }}</h3>
             </form>
             <p class="text-sm text-gray-700 mt-2">{{ task.description }}</p>
+            <div class="flex flex-wrap mt-4 gap-2">
+                {% for tag in task.tags %}
+                <span class="tag">{{ tag }}</span>
+                {% endfor %}
+            </div>
             <div class="flex justify-between items-center mt-4 text-sm text-gray-600">
                 <span>Due: {{ task.due_date }}</span>
-                {% if task.tags %}
-                <span class="bg-green-600 text-white px-2 py-1 rounded-full">{{ task.tags|join:", " }}</span>
-                {% endif %}
             </div>
         </a>
         {% empty %}

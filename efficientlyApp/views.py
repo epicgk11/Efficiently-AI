@@ -17,7 +17,6 @@ def createtask(request):
 def listtasks(request):
     base_url = f"http://{request.get_host()}"
     tasks = dict(requests.get(f"{base_url}/data/list").json())
-    print(tasks)
     context = {"tasks":tasks['tasks']}
     return render(request,'home.html',context)
 
@@ -30,6 +29,8 @@ def deletetask(request,taskId):
         return JsonResponse({"message":"Error occured"})
     
 def updatetask(request,taskId):
+    if request.method == "POST":
+        print(request.POST.getlist('step_completed[]'))
     base_url = f"http://{request.get_host()}"
     res = requests.get(f"{base_url}/data/get/{taskId}")
     context = {'task':res.json()['task']}

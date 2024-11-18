@@ -1,0 +1,84 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+    font-family: 'JetBrains Mono', monospace;
+}
+
+.tag {
+    background-color: #10c875;
+    color: white;
+    border-radius: 0.5rem;
+    padding: 0.2rem 0.5rem;
+    margin-right: 0.5rem;
+    display: inline-block;
+}
+
+.input-like {
+    display: block;
+    width: 100%;
+    font-size: 1.25rem;
+    color: #064431;
+    background-color: transparent;
+    border: none;
+    outline: none;
+    padding: 0.5rem 0;
+    resize: none;
+    font-weight: bold;
+    transition: all 0.2s ease-in-out;
+}
+
+.input-like:focus {
+    outline: none;
+    background-color: white;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 0.25rem;
+    padding: 0.75rem;
+}
+
+.field-container {
+    margin-bottom: 2rem;
+    text-align: left;
+}
+
+.label {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #064431;
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
+.steps-container .step {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.steps-container .remove-btn {
+    color: #e44d26;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.steps-container .remove-btn:hover {
+    text-decoration: underline;
+}
+
+hr {
+    border: none;
+    border-top: 1px solid #10c875;
+    margin: 1.5rem 0;
+}
+
+.form-wrapper {
+    width: 900px;
+    margin: auto;
+    padding: 2rem;
+    border: 1px solid #10c875;
+    border-radius: 0.5rem;
+    background-color: #ffffff;
+    box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.1);
+}

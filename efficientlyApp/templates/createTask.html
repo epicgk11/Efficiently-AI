@@ -1,128 +1,81 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    {% load static  %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
-    <title>Smart Task Manager - Create Task</title>
-    <style>
-        @tailwind base;
-        @tailwind components;
-        @tailwind utilities;
-
-        body {
-            font-family: 'JetBrains Mono', monospace;
-        }
-
-        .tag {
-            background-color: #10c875;
-            color: white;
-            border-radius: 0.5rem;
-            padding: 0.2rem 0.5rem;
-            margin-right: 0.5rem;
-            display: inline-block;
-        }
-
-        .completed-step:checked + .step-text {
-            color: #888888;
-            text-decoration: line-through;
-        }
-    </style>
+    <title>Efficiently AI - Create Task</title>
+    <link href="{% static 'css/createTask.css' %}" rel="stylesheet">
 </head>
-<body class="bg-white text-black min-h-screen">
+<body class="bg-gray-100 text-black min-h-screen">
     <!-- Navbar -->
     <nav class="bg-green-500 text-white py-4 shadow-lg">
         <div class="container mx-auto flex justify-between items-center px-4">
-            <h1 class="text-xl font-bold">Smart Task Manager</h1>
-            <a href="/" class="hover:underline">Home</a>
+            <h1 class="text-xl font-bold">Efficiently AI</h1>
+            <a href="{% url 'listtasks' %}" class="hover:underline">Home</a>
         </div>
     </nav>
 
     <!-- Task Form -->
-    <div class="container mx-auto px-4 mt-6">
-        <h2 class="text-2xl font-bold text-green-700 mb-4">Create Task</h2>
-        <form id="task-form" action="#" method="POST" class="bg-lime-green rounded-lg shadow p-6 space-y-4">
+    <div class="form-wrapper mt-8">
+        <form id="task-form" action="#" method="POST">
             {% csrf_token %}
-            <!-- Name -->
-            <div>
-                <label class="block font-bold text-green-800">Task Name</label>
-                <input type="text" name="name" class="w-full border border-green-500 rounded-lg px-4 py-2 bg-white text-black" required>
+
+            <!-- Task Name -->
+            <div class="field-container">
+                <input id="task-name" type="text" name="name" placeholder="Add Task Name" class="input-like text-4xl font-bold text-center mb-4">
             </div>
+            <hr>
+
             <!-- Description -->
-            <div>
-                <label class="block font-bold text-green-800">Description</label>
-                <textarea name="description" class="w-full border border-green-500 rounded-lg px-4 py-2 bg-white text-black" rows="4" required></textarea>
+            <div class="field-container">
+                <label for="task-description" class="label">Description</label>
+                <textarea id="task-description" name="description" placeholder="Add a brief description..." class="input-like" rows="2"></textarea>
             </div>
+            <hr>
+
             <!-- Due Date -->
-            <div>
-                <label class="block font-bold text-green-800">Due Date</label>
-                <input type="date" name="due_date" class="w-full border border-green-500 rounded-lg px-4 py-2 bg-white text-black" required>
+            <div class="field-container">
+                <label for="task-due-date" class="label">Due Date</label>
+                <input id="task-due-date" type="date" name="due_date" class="input-like">
             </div>
+            <hr>
+
             <!-- Tags -->
-            <div>
-                <label class="block font-bold text-green-800">Tags</label>
-                <div id="tags-container" class="mb-2"></div>
-                <input type="text" id="new-tag" class="w-full border border-green-500 rounded-lg px-4 py-2 bg-white text-black" placeholder="Add a tag">
-                <button type="button" id="add-tag" class="mt-2 bg-green-600 text-white px-4 py-2 rounded-lg">Add Tag</button>
+            <div class="field-container">
+                <label class="label">Tags</label>
+                <div id="tags-container" class="mb-2 flex flex-wrap"></div>
+                <input type="text" id="new-tag" placeholder="Add a tag" class="input-like">
+                <button type="button" id="add-tag" class="text-green-600 font-bold mt-2">+ Add Tag</button>
                 <input type="hidden" name="tags" id="tags-input">
             </div>
+            <hr>
+
             <!-- Resources -->
-            <div>
-                <label class="block font-bold text-green-800">Resources</label>
-                <textarea name="resources" class="w-full border border-green-500 rounded-lg px-4 py-2 bg-white text-black" rows="4"></textarea>
+            <div class="field-container">
+                <label for="task-resources" class="label">Resources</label>
+                <textarea id="task-resources" name="resources" placeholder="Add any resources..." class="input-like" rows="1"></textarea>
             </div>
+            <hr>
+
             <!-- Steps -->
-            <div>
-                <label class="block font-bold text-green-800">Steps</label>
-                <div id="steps-container" class="space-y-2"></div>
-                <button id="add-step" type="button" class="text-sm text-green-600 hover:underline">+ Add Step</button>
+            <div class="field-container">
+                <label class="label">Steps</label>
+                <div id="steps-container" class="steps-container"></div>
+                <button id="add-step" type="button" class="text-green-600 font-bold mt-2">+ Add Step</button>
             </div>
+            <hr>
+
             <!-- Submit Button -->
-            <button type="submit" class="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg">Save Task</button>
+            <div class="text-center">
+                <button type="submit" class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg mt-4">Create Task</button>
+            </div>
         </form>
     </div>
 
-    <script>
-        // Tags Management
-        const tagsContainer = document.getElementById('tags-container');
-        const newTagInput = document.getElementById('new-tag');
-        const tagsInput = document.getElementById('tags-input');
-        const addTagButton = document.getElementById('add-tag');
-        const tags = [];
-
-        addTagButton.addEventListener('click', () => {
-            const tagValue = newTagInput.value.trim();
-            if (tagValue) {
-                tags.push(tagValue);
-                tagsInput.value = tags.join(',');
-                tagsContainer.insertAdjacentHTML('beforeend', `<span class="tag">${tagValue}</span>`);
-                newTagInput.value = '';
-            }
-        });
-
-        // Steps Management
-        const stepsContainer = document.getElementById('steps-container');
-        const addStepButton = document.getElementById('add-step');
-
-        addStepButton.addEventListener('click', () => {
-            const stepTemplate = `
-                <div class="flex items-center space-x-4">
-                    <input type="hidden" name="step_completed[]" value="0">
-                    <input type="checkbox" name="step_completed[]" value="1" class="border-green-500 rounded">
-                    <input type="text" name="step_name[]" class="flex-1 border border-green-500 rounded-lg px-4 py-2 bg-white text-black" placeholder="Step name" required>
-                    <input type="date" name="step_due_date[]" class="border border-green-500 rounded-lg px-4 py-2 bg-white text-black" required>
-                    <button type="button" class="text-red-500 hover:underline">Remove</button>
-                </div>
-            `;
-            stepsContainer.insertAdjacentHTML('beforeend', stepTemplate);
-        });
-
-        stepsContainer.addEventListener('click', (e) => {
-            if (e.target.textContent === 'Remove') {
-                e.target.parentElement.remove();
-            }
-        });
+    <script src="{% static 'js/createTask.js' %}">
     </script>
 </body>
 </html>
