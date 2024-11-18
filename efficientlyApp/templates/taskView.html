@@ -1,32 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    {% load static %}
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
-    <title>Efficiently AI - Task View</title>
-    <link href="{% static '/css/taskView.css' %}" rel="stylesheet">
-    <style>
-        textarea {
-            overflow: hidden;
-            resize: none;
-        }
-    </style>
-</head>
-<body class="bg-gray-100 text-black min-h-screen">
-    <!-- Navbar -->
-    <nav class="bg-green-500 text-white py-4 shadow-lg">
-        <div class="container mx-auto flex justify-between items-center px-4">
-            <h1 class="text-xl font-bold">Efficiently AI</h1>
-            <ul class="flex space-x-6">
-                <li><a href="{% url 'listtasks' %}" class="hover:underline">Home</a></li>
-                <li><a href="{% url 'createtask' %}" class="hover:underline">Create New Task</a></li>
-            </ul>
-        </div>
-    </nav>
+{% extends 'base.html' %}
 
+{% block title %}Efficiently AI - Update{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="/static/css/taskView.css">
+{% endblock %}
+
+{% block content %}
     <!-- Task Form -->
     <div class="form-wrapper mt-8">
         <form id="task-form" action="#" method="POST">
@@ -99,7 +79,7 @@
             </div>
         </form>
     </div>
-    <script src="{% static '/js/taskView.js' %}"></script>
+    <script src="/static/js/taskView.js"></script>
     <script>
         // Automatically resize all textareas based on their content
         const textareas = document.querySelectorAll('textarea');
@@ -116,5 +96,4 @@
     });
 
     </script>
-</body>
-</html>
+{% endblock %}

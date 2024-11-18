@@ -1,6 +1,3 @@
-
-
-// Tags Management
 const tagsContainer = document.getElementById('tags-container');
 const newTagInput = document.getElementById('new-tag');
 const tagsInput = document.getElementById('tags-input');
@@ -17,7 +14,6 @@ addTagButton.addEventListener('click', () => {
     }
 });
 
-// Steps Management
 const stepsContainer = document.getElementById('steps-container');
 const addStepButton = document.getElementById('add-step');
 

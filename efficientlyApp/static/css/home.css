@@ -1,0 +1,25 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+    font-family: 'JetBrains Mono', monospace;
+}
+
+.task-checkbox input:checked + .task-text {
+    text-decoration: line-through;
+    color: #888888;
+}
+
+.clickable-div {
+    cursor: pointer;
+}
+
+.tag {
+    background-color: #10c875;
+    color: white;
+    border-radius: 0.5rem;
+    padding: 0.2rem 0.5rem;
+    margin-right: 0.5rem;
+    display: inline-block;
+}

@@ -1,86 +1,68 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    {% load static %}
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
-    <title>Efficiently AI - Create Task</title>
-    <link href="{% static 'css/createTask.css' %}" rel="stylesheet">
-    <style>
-        textarea {
-            overflow: hidden;
-            resize: none;
-        }
-    </style>
-</head>
-<body class="bg-gray-100 text-black min-h-screen">
-    <!-- Navbar -->
-    <nav class="bg-green-500 text-white py-4 shadow-lg">
-        <div class="container mx-auto flex justify-between items-center px-4">
-            <h1 class="text-xl font-bold">Efficiently AI</h1>
-            <a href="{% url 'listtasks' %}" class="hover:underline">Home</a>
+{% extends 'base.html' %}
+
+{% block title %}Efficiently AI - Create{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="/static/css/createTask.css">
+{% endblock %}
+
+{% block content %}
+<!-- Task Form -->
+<div class="form-wrapper mt-8">
+    <form id="task-form" action="#" method="POST">
+        {% csrf_token %}
+
+        <!-- Task Name -->
+        <div class="field-container">
+            <input id="task-name" type="text" name="name" placeholder="Add Task Name" class="input-like text-4xl font-bold text-center mb-4">
         </div>
-    </nav>
+        <hr>
 
-    <!-- Task Form -->
-    <div class="form-wrapper mt-8">
-        <form id="task-form" action="#" method="POST">
-            {% csrf_token %}
+        <!-- Description -->
+        <div class="field-container">
+            <label for="task-description" class="label">Description</label>
+            <textarea id="task-description" name="description" placeholder="Add a brief description..." class="input-like" rows="1"></textarea>
+        </div>
+        <hr>
 
-            <!-- Task Name -->
-            <div class="field-container">
-                <input id="task-name" type="text" name="name" placeholder="Add Task Name" class="input-like text-4xl font-bold text-center mb-4">
-            </div>
-            <hr>
+        <!-- Due Date -->
+        <div class="field-container">
+            <label for="task-due-date" class="label">Due Date</label>
+            <input id="task-due-date" type="date" name="due_date" class="input-like">
+        </div>
+        <hr>
 
-            <!-- Description -->
-            <div class="field-container">
-                <label for="task-description" class="label">Description</label>
-                <textarea id="task-description" name="description" placeholder="Add a brief description..." class="input-like" rows="1"></textarea>
-            </div>
-            <hr>
+        <!-- Tags -->
+        <div class="field-container">
+            <label class="label">Tags</label>
+            <div id="tags-container" class="mb-2 flex flex-wrap"></div>
+            <input type="text" id="new-tag" placeholder="Add a tag" class="input-like">
+            <button type="button" id="add-tag" class="text-green-600 font-bold mt-2">+ Add Tag</button>
+            <input type="hidden" name="tags" id="tags-input">
+        </div>
+        <hr>
 
-            <!-- Due Date -->
-            <div class="field-container">
-                <label for="task-due-date" class="label">Due Date</label>
-                <input id="task-due-date" type="date" name="due_date" class="input-like">
-            </div>
-            <hr>
+        <!-- Resources -->
+        <div class="field-container">
+            <label for="task-resources" class="label">Resources</label>
+            <textarea id="task-resources" name="resources" placeholder="Add any resources..." class="input-like" rows="1"></textarea>
+        </div>
+        <hr>
 
-            <!-- Tags -->
-            <div class="field-container">
-                <label class="label">Tags</label>
-                <div id="tags-container" class="mb-2 flex flex-wrap"></div>
-                <input type="text" id="new-tag" placeholder="Add a tag" class="input-like">
-                <button type="button" id="add-tag" class="text-green-600 font-bold mt-2">+ Add Tag</button>
-                <input type="hidden" name="tags" id="tags-input">
-            </div>
-            <hr>
+        <!-- Steps -->
+        <div class="field-container">
+            <label class="label">Steps</label>
+            <div id="steps-container" class="steps-container"></div>
+            <button id="add-step" type="button" class="text-green-600 font-bold mt-2">+ Add Step</button>
+        </div>
+        <hr>
 
-            <!-- Resources -->
-            <div class="field-container">
-                <label for="task-resources" class="label">Resources</label>
-                <textarea id="task-resources" name="resources" placeholder="Add any resources..." class="input-like" rows="1"></textarea>
-            </div>
-            <hr>
+        <!-- Submit Button -->
+        <div class="text-center">
+            <button type="submit" class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg mt-4">Create Task</button>
+        </div>
+    </form>
+</div>
 
-            <!-- Steps -->
-            <div class="field-container">
-                <label class="label">Steps</label>
-                <div id="steps-container" class="steps-container"></div>
-                <button id="add-step" type="button" class="text-green-600 font-bold mt-2">+ Add Step</button>
-            </div>
-            <hr>
-
-            <!-- Submit Button -->
-            <div class="text-center">
-                <button type="submit" class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg mt-4">Create Task</button>
-            </div>
-        </form>
-    </div>
-
-    <script src="{% static 'js/createTask.js' %}"></script>
-</body>
-</html>
+<script src="/static/js/createTask.js"></script>
+{% endblock %}
