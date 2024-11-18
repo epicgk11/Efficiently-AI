@@ -8,6 +8,12 @@
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
     <title>Efficiently AI - Task View</title>
     <link href="{% static '/css/taskView.css' %}" rel="stylesheet">
+    <style>
+        textarea {
+            overflow: hidden;
+            resize: none;
+        }
+    </style>
 </head>
 <body class="bg-gray-100 text-black min-h-screen">
     <!-- Navbar -->
@@ -94,5 +100,21 @@
         </form>
     </div>
     <script src="{% static '/js/taskView.js' %}"></script>
+    <script>
+        // Automatically resize all textareas based on their content
+        const textareas = document.querySelectorAll('textarea');
+        textareas.forEach((textarea) => {
+    // Adjust height on initial load
+        textarea.style.height = 'auto';
+        textarea.style.height = `${textarea.scrollHeight}px`;
+
+    // Adjust height dynamically on input
+        textarea.addEventListener('input', function () {
+            this.style.height = 'auto';
+            this.style.height = `${this.scrollHeight}px`;
+        });
+    });
+
+    </script>
 </body>
 </html>

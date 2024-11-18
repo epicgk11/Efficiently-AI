@@ -1,13 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    {% load static  %}
+    {% load static %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
     <title>Efficiently AI - Create Task</title>
     <link href="{% static 'css/createTask.css' %}" rel="stylesheet">
+    <style>
+        textarea {
+            overflow: hidden;
+            resize: none;
+        }
+    </style>
 </head>
 <body class="bg-gray-100 text-black min-h-screen">
     <!-- Navbar -->
@@ -32,7 +38,7 @@
             <!-- Description -->
             <div class="field-container">
                 <label for="task-description" class="label">Description</label>
-                <textarea id="task-description" name="description" placeholder="Add a brief description..." class="input-like" rows="2"></textarea>
+                <textarea id="task-description" name="description" placeholder="Add a brief description..." class="input-like" rows="1"></textarea>
             </div>
             <hr>
 
@@ -75,7 +81,6 @@
         </form>
     </div>
 
-    <script src="{% static 'js/createTask.js' %}">
-    </script>
+    <script src="{% static 'js/createTask.js' %}"></script>
 </body>
 </html>
