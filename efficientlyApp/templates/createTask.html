@@ -1,27 +1,26 @@
-{% extends 'base.html' %}
 
-{% block title %}Efficiently AI - Create{% endblock %}
-
-{% block extra_css %}
-<link rel="stylesheet" href="/static/app/css/createTask.css">
-{% endblock %}
-
-{% block content %}
-<!-- Task Form -->
-<div class="form-wrapper mt-8">
-    <form id="task-form" action="#" method="POST">
+    {% extends 'base.html' %}
+    {% block title %}Efficiently AI - Create Task{% endblock %}
+    {% block extra_css %}
+    <link rel="stylesheet" href="/static/app/css/createTask.css">
+    {% endblock %}
+<body>
+    {% block content %}
+    <form id="task-form" action="#" method="POST" class="bg-white p-8 rounded-lg shadow-lg mx-auto mt-10 mb-10 space-y-6">
         {% csrf_token %}
 
         <!-- Task Name -->
         <div class="field-container">
-            <input id="task-name" type="text" name="name" placeholder="Add Task Name" class="input-like text-4xl font-bold text-center mb-4">
+            <input id="task-name" type="text" name="name" placeholder="Add Task Name" 
+                   class="input-like text-3xl font-bold text-center placeholder-gray-400">
         </div>
         <hr>
 
         <!-- Description -->
         <div class="field-container">
             <label for="task-description" class="label">Description</label>
-            <textarea id="task-description" name="description" placeholder="Add a brief description..." class="input-like" rows="1"></textarea>
+            <textarea id="task-description" name="description" placeholder="Add a brief description..." 
+                      class="input-like resize-none" rows="1"></textarea>
         </div>
         <hr>
 
@@ -35,9 +34,13 @@
         <!-- Tags -->
         <div class="field-container">
             <label class="label">Tags</label>
-            <div id="tags-container" class="mb-2 flex flex-wrap"></div>
-            <input type="text" id="new-tag" placeholder="Add a tag" class="input-like">
-            <button type="button" id="add-tag" class="text-green-600 font-bold mt-2">+ Add Tag</button>
+            <div id="tags-container" class="mb-2 flex flex-wrap gap-2"></div>
+            <div class="flex gap-4">
+                <input type="text" id="new-tag" class="input-like flex-1" placeholder="Add a tag">
+                <button type="button" id="add-tag" class="bg-green-600 text-white px-4 py-2 rounded-lg shadow">
+                    + Add Tag
+                </button>
+            </div>
             <input type="hidden" name="tags" id="tags-input">
         </div>
         <hr>
@@ -45,24 +48,82 @@
         <!-- Resources -->
         <div class="field-container">
             <label for="task-resources" class="label">Resources</label>
-            <textarea id="task-resources" name="resources" placeholder="Add any resources..." class="input-like" rows="1"></textarea>
+            <textarea id="task-resources" name="resources" placeholder="Add any resources..." 
+                      class="input-like resize-none" rows="1"></textarea>
         </div>
         <hr>
 
         <!-- Steps -->
         <div class="field-container">
             <label class="label">Steps</label>
-            <div id="steps-container" class="steps-container"></div>
-            <button id="add-step" type="button" class="text-green-600 font-bold mt-2">+ Add Step</button>
+            <div id="steps-container" class="steps-container space-y-4"></div>
+            <button id="add-step" type="button" 
+                    class="text-green-600 font-bold bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded-lg">
+                + Add Step
+            </button>
         </div>
         <hr>
 
         <!-- Submit Button -->
         <div class="text-center">
-            <button type="submit" class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg mt-4">Create Task</button>
+            <button type="submit" 
+                    class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg shadow-lg w-full sm:w-auto">
+                Create Task
+            </button>
         </div>
     </form>
-</div>
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+    // Automatically resize textareas
+    document.querySelectorAll('textarea').forEach((textarea) => {
+        textarea.style.height = 'auto';
+        textarea.style.height = `${textarea.scrollHeight}px`;
 
-<script src="/static/app/js/createTask.js"></script>
-{% endblock %}
+        textarea.addEventListener('input', function () {
+            this.style.height = 'auto';
+            this.style.height = `${this.scrollHeight}px`;
+        });
+    });
+
+    // Tags Management
+    const tagsContainer = document.getElementById('tags-container');
+    const newTagInput = document.getElementById('new-tag');
+    const tagsInput = document.getElementById('tags-input');
+    const addTagButton = document.getElementById('add-tag');
+    const tags = [];
+
+    addTagButton.addEventListener('click', () => {
+        const tagValue = newTagInput.value.trim();
+        if (tagValue && !tags.includes(tagValue)) {
+            tags.push(tagValue);
+            tagsInput.value = tags.join(',');
+            tagsContainer.insertAdjacentHTML('beforeend', `<span class="tag bg-green-600 text-white px-2 py-1 rounded">${tagValue}</span>`);
+            newTagInput.value = '';
+        }
+    });
+
+    // Steps Management
+    const stepsContainer = document.getElementById('steps-container');
+    const addStepButton = document.getElementById('add-step');
+
+    addStepButton.addEventListener('click', () => {
+        const stepTemplate = `
+            <div class="step">
+                <input type="hidden" name="step_completed[]" value="0">
+                <input type="checkbox" name="step_completed[]" value="1">
+                <input type="text" name="step_name[]" placeholder="Step name" class="input-like">
+                <input type="date" name="step_due_date[]" class="input-like">
+                <span class="remove-btn text-red-500 font-bold cursor-pointer">Remove</span>
+            </div>
+        `;
+        stepsContainer.insertAdjacentHTML('beforeend', stepTemplate);
+    });
+
+    stepsContainer.addEventListener('click', (e) => {
+        if (e.target.classList.contains('remove-btn')) {
+            e.target.parentElement.remove();
+        }
+    });
+});
+    </script>
+    {% endblock %}

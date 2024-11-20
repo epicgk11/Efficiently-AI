@@ -4,3 +4,4 @@ djangorestframework
 groq
 langchain-groq
 pymongo
+cryptography

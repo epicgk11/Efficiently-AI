@@ -1,54 +1,57 @@
 from django.shortcuts import render
 from django.http import JsonResponse
-from bson.objectid import ObjectId
-from .utils import *
 from django.views.decorators.csrf import csrf_exempt
+from .utils import *
 import json
+from .encryption_helper import encrypt_user_id,decrypt_user_id
+@csrf_exempt
+def registerUserView(request):
+    if request.method == 'POST':
+        id = request.headers.get('Encrypted-ID')
+        existing_user = usersCollection.find_one({'Encrypted-ID':id})
+        if existing_user:
+            return JsonResponse({'message': 'User already exists'}, status=400)
+        user_data = {
+            "Encrypted-ID":id
+        }
+        createUser(user_data)
+        return JsonResponse({'message': 'User registered successfully'})
 
 @csrf_exempt
 def createTaskView(request):
-    if request.method == "POST": 
-        print("Reached Here")
-        if request.headers.get("Content-Type") == "application/json":
-            data = json.loads(request.body)
-        else:
-            data = request.POST.dict()
-            print(data)
-            data['tags'] = request.POST.getlist('tags')
-            steps_raw = request.POST.get('steps', '[]')
-            data['steps'] = json.loads(steps_raw) if steps_raw else []
-            print(data)
-        taskId = createTask(data)
-        return JsonResponse({'message': 'Task created successfully', 'task_id': str(taskId)})
-    
+    if request.method == 'POST':
+        encrypted_id = request.headers.get('Encrypted-ID')
+        if not encrypted_id:
+            return JsonResponse({'error': 'Unauthorized'}, status=401)
+        task_data = json.loads(request.body)
+        created_task = addTaskToUser(encrypted_id, task_data)
+        return JsonResponse({'message': 'Task created successfully', 'task': created_task})
 
 @csrf_exempt
-def updateTaskView(request, taskId):
-    if request.method == "POST":
-        if request.headers.get("Content-Type") == "application/json":
-            data = json.loads(request.body)
-        else:
-            data = request.POST.dict()
-            data['tags'] = request.POST.getlist('tags')
-            steps_raw = request.POST.get('steps', '[]')
-            print(steps_raw)
-            data['steps'] = json.loads(steps_raw) if steps_raw else []
-        updateTask(ObjectId(taskId), data)
-        return JsonResponse({"message": "Task Updation Successful"})
+def updateTaskView(request, task_id):
+    if request.method == 'POST':
+        encrypted_id = request.headers.get('Encrypted-ID')
+        if not encrypted_id:
+            return JsonResponse({'error': 'Unauthorized'}, status=401)
+        task_updates = json.loads(request.body)
+        updateUserTask(encrypted_id, task_id, task_updates)
+        return JsonResponse({'message': 'Task updated successfully'})
 
 @csrf_exempt
-def deleteTaskView(request, taskId):
+def deleteTaskView(request, task_id):
     if request.method == 'DELETE':
-        deleteTask(ObjectId(taskId))
+        encrypted_id = request.headers.get('Encrypted-ID')
+        if not encrypted_id:
+            return JsonResponse({'error': 'Unauthorized'}, status=401)
+        deleteUserTask(encrypted_id, task_id)
         return JsonResponse({'message': 'Task deleted successfully'})
 
 @csrf_exempt
-def getTaskView(request, taskId):
-    if request.method == 'GET':
-        task = getTask(ObjectId(taskId))
-        return JsonResponse({'task': task})
-@csrf_exempt
 def listTasksView(request):
     if request.method == 'GET':
-        tasks = listTasks()
+        encrypted_id = request.headers.get('Encrypted-ID')
+        if not encrypted_id:
+            return JsonResponse({'error': 'Unauthorized'}, status=401)
+        tasks = getUserTasks(encrypted_id)
         return JsonResponse({'tasks': tasks})
+ 

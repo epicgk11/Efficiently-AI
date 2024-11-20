@@ -9,17 +9,65 @@
     {% block extra_css %}{% endblock %}
     <title>{% block title %}Efficiently AI{% endblock %}</title>
 </head>
-<body class="bg-white text-black min-h-screen">
+<body class="bg-gray-50 text-black min-h-screen">
     <!-- Navbar -->
-    <nav class="bg-green-500 text-white py-4 shadow-lg">
-        <div class="container mx-auto flex justify-between items-center px-4">
-            <h1 class="text-xl font-bold">Efficiently AI</h1>
-            <ul class="flex space-x-6">
-                <li><a href="{% url 'listtasks' %}" class="hover:underline">Home</a></li>
-                <li><a href="{% url 'createtask' %}" class="hover:underline">Create New Task</a></li>
+    <nav class="bg-gradient-to-r from-green-400 via-green-500 to-green-600 shadow-lg">
+        <div class="container mx-auto flex justify-between items-center px-4 py-4">
+            <!-- Logo -->
+            <a href="{% url 'listtasks' %}" class="flex items-center gap-2">
+                <div class="flex items-center justify-center bg-white rounded-full h-10 w-10 shadow-lg">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                    </svg>
+                </div>
+                <h1 class="text-2xl font-bold text-white">Efficiently AI</h1>
+            </a>            
+            <!-- Hamburger Menu -->
+            <button id="menu-btn" class="block lg:hidden text-white focus:outline-none">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+                </svg>
+            </button>
+            <!-- Nav Links -->
+            <ul id="menu" class="hidden lg:flex space-x-8 items-center text-white text-lg">
+                <li>
+                    <a href="{% url 'createtask' %}" class="hover:bg-green-700 px-4 py-2 rounded transition duration-300">
+                        Create New Task
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="hover:bg-green-700 px-4 py-2 rounded transition duration-300">
+                        AI Generate Task
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="hover:bg-green-700 px-4 py-2 rounded transition duration-300">
+                        My Week
+                    </a>
+                </li>
             </ul>
+            <!-- Profile Dropdown -->
+            <div class="relative group">
+                <button class="flex items-center space-x-2 text-white hover:bg-green-700 px-4 py-2 rounded transition duration-300">
+                    <img src="{% static 'images/profile-placeholder.png' %}" alt="Profile" class="h-8 w-8 rounded-full border-2 border-white">
+                    <span>Profile</span>
+                </button>
+                <div class="absolute right-0 mt-2 w-48 bg-white rounded shadow-lg hidden group-hover:block">
+                    <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">My Profile</a>
+                    <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Settings</a>
+                    <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Logout</a>
+                </div>
+            </div>
         </div>
     </nav>
     {% block content %}{% endblock %}
+
+    <script>
+        // Toggle menu for mobile
+        document.getElementById('menu-btn').addEventListener('click', () => {
+            const menu = document.getElementById('menu');
+            menu.classList.toggle('hidden');
+        });
+    </script>
 </body>
 </html>

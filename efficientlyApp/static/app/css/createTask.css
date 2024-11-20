@@ -6,15 +6,6 @@ body {
     font-family: 'JetBrains Mono', monospace;
 }
 
-.tag {
-    background-color: #10c875;
-    color: white;
-    border-radius: 0.5rem;
-    padding: 0.2rem 0.5rem;
-    margin-right: 0.5rem;
-    display: inline-block;
-}
-
 .input-like {
     display: block;
     width: 100%;
@@ -54,7 +45,14 @@ body {
     display: flex;
     gap: 1rem;
     align-items: center;
-    margin-bottom: 1rem;
+}
+
+.steps-container .step input[name="step_name[]"] {
+    flex: 2;
+}
+
+.steps-container .step input[name="step_due_date[]"] {
+    flex: 1;
 }
 
 .steps-container .remove-btn {
@@ -71,14 +69,4 @@ hr {
     border: none;
     border-top: 1px solid #10c875;
     margin: 1.5rem 0;
-}
-
-.form-wrapper {
-    width: 900px;
-    margin: auto;
-    padding: 2rem;
-    border: 1px solid #10c875;
-    border-radius: 0.5rem;
-    background-color: #ffffff;
-    box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.1);
 }

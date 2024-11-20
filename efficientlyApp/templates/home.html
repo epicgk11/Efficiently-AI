@@ -22,15 +22,22 @@
     {% for task in tasks %}
     <div class="task" data-name="{{ task.name }}" data-tags="{{ task.tags|join:',' }}">
         <a href="/app/update/{{ task.id }}/" class="block bg-lime-green border-2 border-green-700 rounded-lg shadow p-4 hover:shadow-lg transition clickable-div">
-            <form method="POST" action="/app/delete/{{ task.id }}/" class="flex items-center gap-2">
+            <form method="POST" action="/app/delete/{{ task.id }}/" class="flex items-center gap-4">
                 {% csrf_token %}
-                <input 
-                    type="checkbox" 
-                    name="completed" 
-                    value="1"
-                    class="task-checkbox border-green-500 rounded"
-                    onchange="this.form.submit();" 
-                    {% if task.completed %}checked{% endif %}>
+                <label class="custom-checkbox">
+                    <input 
+                        type="checkbox" 
+                        name="completed" 
+                        value="1"
+                        class="hidden"
+                        onchange="this.form.submit();" 
+                        {% if task.completed %}checked{% endif %}>
+                    <div class="checkbox-icon flex items-center justify-center bg-white rounded-full h-10 w-10 shadow-lg">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                        </svg>
+                    </div>
+                </label>
                 <h3 class="task-text text-lg font-bold text-green-800">{{ task.name }}</h3>
             </form>
             <p class="text-sm text-gray-700 mt-2 truncate">{{ task.description }}</p>

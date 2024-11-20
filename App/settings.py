@@ -27,8 +27,11 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
+AUTH_USER_MODEL = 'efficientlyApp.CustomUser'
 # Application definition
+
+LOGIN_REDIRECT_URL = 'app/home'
+LOGOUT_REDIRECT_URL = 'app/login'
 
 INSTALLED_APPS = [
     'django.contrib.admin',

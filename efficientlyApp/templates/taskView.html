@@ -1,99 +1,110 @@
 {% extends 'base.html' %}
 
-{% block title %}Efficiently AI - Update{% endblock %}
+{% block title %}Efficiently AI - Update Task{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="/static/app/css/taskView.css">
 {% endblock %}
 
 {% block content %}
-    <!-- Task Form -->
-    <div class="form-wrapper mt-8">
-        <form id="task-form" action="#" method="POST">
-            {% csrf_token %}
-            <!-- Task ID (Hidden) -->
-            <input type="hidden" name="task_id" value="{{ task.id }}">
+<div class="form-wrapper mt-8 mb-8 mx-auto px-4 lg:px-0">
+    <form id="task-form" action="#" method="POST" class="bg-white p-6 rounded-lg shadow-lg space-y-6">
+        {% csrf_token %}
+        <!-- Task ID (Hidden) -->
+        <input type="hidden" name="task_id" value="{{ task.id }}">
 
-            <!-- Task Name as Heading -->
-            <div class="field-container">
-                <input id="task-name" type="text" name="name" value="{{ task.name }}" class="input-like text-4xl font-bold text-center mb-4">
+        <!-- Task Name -->
+        <div class="field-container">
+            <input id="task-name" type="text" name="name" value="{{ task.name }}" 
+                class="input-like text-3xl font-bold text-center placeholder-gray-400">
+        </div>
+        <hr>
+
+        <!-- Description -->
+        <div class="field-container">
+            <label for="task-description" class="label">Description</label>
+            <textarea id="task-description" name="description" 
+                      class="input-like resize-none" rows="1">{{ task.description }}</textarea>
+        </div>
+        <hr>
+
+        <!-- Due Date -->
+        <div class="field-container">
+            <label for="task-due-date" class="label">Due Date</label>
+            <input id="task-due-date" type="date" name="due_date" value="{{ task.due_date }}" class="input-like">
+        </div>
+        <hr>
+
+        <!-- Tags -->
+        <div class="field-container">
+            <label class="label">Tags</label>
+            <div id="tags-container" class="mb-2 flex flex-wrap gap-2">
+                {% for tag in task.tags %}
+                <span class="tag bg-green-600 text-white px-2 py-1 rounded">{{ tag }}</span>
+                {% endfor %}
             </div>
-            <hr>
-
-            <!-- Description -->
-            <div class="field-container">
-                <label for="task-description" class="label">Description</label>
-                <textarea id="task-description" name="description" class="input-like" rows="2">{{ task.description }}</textarea>
+            <div class="flex gap-4">
+                <input type="text" id="new-tag" class="input-like flex-1" placeholder="Add a tag">
+                <button type="button" id="add-tag" class="bg-green-600 text-white px-4 py-2 rounded-lg shadow">
+                    + Add Tag
+                </button>
             </div>
-            <hr>
+            <input type="hidden" name="tags" id="tags-input" value="{{ task.tags|join:', ' }}">
+        </div>
+        <hr>
 
-            <!-- Due Date -->
-            <div class="field-container">
-                <label for="task-due-date" class="label">Due Date</label>
-                <input id="task-due-date" type="date" name="due_date" value="{{ task.due_date }}" class="input-like">
-            </div>
-            <hr>
+        <!-- Resources -->
+        <div class="field-container">
+            <label for="task-resources" class="label">Resources</label>
+            <textarea id="task-resources" name="resources" 
+                      class="input-like resize-none" rows="1">{{ task.resources }}</textarea>
+        </div>
+        <hr>
 
-            <!-- Tags -->
-            <div class="field-container">
-                <label class="label">Tags</label>
-                <div id="tags-container" class="mb-2 flex flex-wrap">
-                    {% for tag in task.tags %}
-                    <span class="tag">{{ tag }}</span>
-                    {% endfor %}
+        <!-- Steps -->
+        <div class="field-container">
+            <label class="label">Steps</label>
+            <div id="steps-container" class="steps-container space-y-4">
+                {% for step in task.steps %}
+                <div class="step flex items-center gap-4">
+                    <input type="hidden" name="step_completed[]" value="0">
+                    <input type="checkbox" name="step_completed[]" value="1" {% if step.completed %}checked{% endif %}>
+                    <input type="text" name="step_name[]" value="{{ step.name }}" placeholder="Step name" 
+                           class="input-like flex-1">
+                    <input type="date" name="step_due_date[]" value="{{ step.due_date }}" class="input-like w-40">
+                    <span class="remove-btn text-red-500 font-bold cursor-pointer">Remove</span>
                 </div>
-                <input type="text" id="new-tag" class="input-like" placeholder="Add a tag">
-                <button type="button" id="add-tag" class="text-green-600 font-bold mt-2">+ Add Tag</button>
-                <input type="hidden" name="tags" id="tags-input" value="{{ task.tags|join:', ' }}">
+                {% endfor %}
             </div>
-            <hr>
+            <button id="add-step" type="button" 
+                    class="text-green-600 font-bold mt-2 bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded-lg">
+                + Add Step
+            </button>
+        </div>
+        <hr>
 
-            <!-- Resources -->
-            <div class="field-container">
-                <label for="task-resources" class="label">Resources</label>
-                <textarea id="task-resources" name="resources" class="input-like" rows="1">{{ task.resources }}</textarea>
-            </div>
-            <hr>
+        <!-- Submit Button -->
+        <div class="text-center">
+            <button type="submit" 
+                    class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg shadow-lg w-full sm:w-auto">
+                Save Task
+            </button>
+        </div>
+    </form>
+</div>
 
-            <!-- Steps -->
-            <div class="field-container">
-                <label class="label">Steps</label>
-                <div id="steps-container" class="steps-container">
-                    {% for step in task.steps %}
-                    <div class="step">
-                        <input type="hidden" name="step_completed[]" value="0">
-                        <input type="checkbox" name="step_completed[]" value="1" {% if step.completed %}checked{% endif %}>
-                        <input type="text" name="step_name[]" value="{{ step.name }}" class="input-like" placeholder="Step name">
-                        <input type="date" name="step_due_date[]" value="{{ step.due_date }}" class="input-like">
-                        <span class="remove-btn">Remove</span>
-                    </div>
-                    {% endfor %}
-                </div>
-                <button id="add-step" type="button" class="text-green-600 font-bold mt-2">+ Add Step</button>
-            </div>
-            <hr>
-
-            <!-- Submit Button -->
-            <div class="text-center">
-                <button type="submit" class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg mt-4">Save Task</button>
-            </div>
-        </form>
-    </div>
-    <script src="/static/app/js/taskView.js"></script>
-    <script>
-        // Automatically resize all textareas based on their content
-        const textareas = document.querySelectorAll('textarea');
-        textareas.forEach((textarea) => {
-    // Adjust height on initial load
+<script src="/static/app/js/taskView.js"></script>
+<script>
+    // Automatically resize all textareas based on their content
+    const textareas = document.querySelectorAll('textarea');
+    textareas.forEach((textarea) => {
         textarea.style.height = 'auto';
         textarea.style.height = `${textarea.scrollHeight}px`;
 
-    // Adjust height dynamically on input
         textarea.addEventListener('input', function () {
             this.style.height = 'auto';
             this.style.height = `${this.scrollHeight}px`;
         });
     });
-
-    </script>
+</script>
 {% endblock %}
