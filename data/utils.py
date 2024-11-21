@@ -10,31 +10,39 @@ def createUser(data):
     user_id = usersCollection.insert_one(data).inserted_id
     return user_id
 
-def addTaskToUser(encrypted_id, task):
-    print(encrypted_id)
-    user = usersCollection.find({'Encrypted-ID': encrypted_id})
+def addTaskToUser(userId, task):
+    print(userId)
+    user = usersCollection.find({'userId': userId})
     print(user)
     if user:
         task['_id'] = str(ObjectId())
-        result = usersCollection.update_one({'Encrypted-ID': encrypted_id}, {'$push': {'tasks': task}})
+        result = usersCollection.update_one({'userId': userId}, {'$push': {'tasks': task}})
         return task
 
-def updateUserTask(encrypted_id, task_id, updates):
-    user = usersCollection.find_one({'Encrypted-ID': encrypted_id})
+def updateUserTask(userId, task_id, updates):
+    user = usersCollection.find_one({'userId': userId})
     if user:
         tasks = user.get('tasks', [])
         for task in tasks:
             if task['_id'] == task_id:
                 task.update(updates)
                 break
-        usersCollection.update_one({'Encrypted-Id': encrypted_id}, {'$set': {'tasks': tasks}})
+        usersCollection.update_one({'userId': userId}, {'$set': {'tasks': tasks}})
 
-def deleteUserTask(encrypted_id, task_id):
-    user = usersCollection.find_one({'Encrypted-ID': encrypted_id})
+def deleteUserTask(userId, task_id):
+    user = usersCollection.find_one({'userId': userId})
     if user:
         tasks = [task for task in user['tasks'] if task['_id'] != task_id]
-        usersCollection.update_one({'Encrypted-ID': encrypted_id}, {'$set': {'tasks': tasks}})
+        usersCollection.update_one({'userId': userId}, {'$set': {'tasks': tasks}})
 
-def getUserTasks(encrypted_id):
-    user = usersCollection.find_one({'Encrypted-ID': encrypted_id})
+def getUserTasks(userId):
+    user = usersCollection.find_one({'userId': userId})
     return user.get('tasks', []) if user else []
+
+def getSpeceficTask(userId,taskId):
+    user = usersCollection.find_one({'userId':userId})
+    if user:
+        for task in user['tasks']:
+            if task['_id'] == taskId:
+                return task
+    return {"message":"Task Not Found"}

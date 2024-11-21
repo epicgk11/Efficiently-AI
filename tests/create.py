@@ -9,7 +9,7 @@ task_data = {
     "name": "Complete Project Report",
     "description": "Work on the project report for the AI course.",
     "due_date": "2024-11-30",
-    "tags": ["work", "urgent"],
+    "tags": ["work", "urgent",'asdas'],
     "steps": [
         {"name": "Draft the introduction", "completed": False, "due_date": "2024-11-25"},
         {"name": "Prepare the summary", "completed": False, "due_date": "2024-11-28"}
@@ -18,7 +18,7 @@ task_data = {
 
 headers = {
     "Content-Type": "application/json",
-    "Encrypted-ID": dummy_encrypted_id
+    "userId": dummy_encrypted_id
 }
 
 response = requests.post(url, data=json.dumps(task_data), headers=headers)
