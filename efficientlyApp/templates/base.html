@@ -4,7 +4,7 @@
     {% load static %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
     {% block extra_css %}{% endblock %}
     <title>{% block title %}Efficiently AI{% endblock %}</title>
@@ -21,7 +21,7 @@
                     </svg>
                 </div>
                 <h1 class="text-2xl font-bold text-white">Efficiently AI</h1>
-            </a>            
+            </a>
             <!-- Hamburger Menu -->
             <button id="menu-btn" class="block lg:hidden text-white focus:outline-none">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -47,15 +47,23 @@
                 </li>
             </ul>
             <!-- Profile Dropdown -->
-            <div class="relative group">
-                <button class="flex items-center space-x-2 text-white hover:bg-green-700 px-4 py-2 rounded transition duration-300">
-                    <img src="{% static 'images/profile-placeholder.png' %}" alt="Profile" class="h-8 w-8 rounded-full border-2 border-white">
+            <div class="relative">
+                <button id="profile-dropdown-btn" class="flex items-center space-x-2 text-white hover:bg-green-700 px-4 py-2 rounded transition duration-300">
+                    <img src="{{ user_data.profile_image|default:'https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/Avatar_icon_green.svg/2048px-Avatar_icon_green.svg.png' }}" 
+                         alt="Profile" class="h-8 w-8 rounded-full border-2 border-white">
                     <span>Profile</span>
                 </button>
-                <div class="absolute right-0 mt-2 w-48 bg-white rounded shadow-lg hidden group-hover:block">
-                    <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">My Profile</a>
-                    <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Settings</a>
-                    <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Logout</a>
+                <div id="profile-dropdown" class="absolute right-0 mt-2 w-56 bg-white rounded shadow-lg hidden">
+                    <div class="flex items-center gap-4 px-4 py-3 border-b border-gray-200">
+                        <img src="{{ user_data.profile_image|default:'https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/Avatar_icon_green.svg/2048px-Avatar_icon_green.svg.png' }}" 
+                             alt="Profile" class="h-10 w-10 rounded-full object-cover">
+                        <div>
+                            <p class="font-bold text-gray-800">{{ user_data.username }}</p>
+                            <p class="text-sm text-gray-600">{{ user_data.email }}</p>
+                        </div>
+                    </div>
+                    <a href="{% url 'profileView' %}" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Edit Profile</a>
+                    <a href="{% url 'logout' %}" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Logout</a>
                 </div>
             </div>
         </div>
@@ -63,10 +71,36 @@
     {% block content %}{% endblock %}
 
     <script>
-        // Toggle menu for mobile
-        document.getElementById('menu-btn').addEventListener('click', () => {
+        document.addEventListener('DOMContentLoaded', () => {
+            // Ensure menu is hidden on load
             const menu = document.getElementById('menu');
-            menu.classList.toggle('hidden');
+            if (!menu.classList.contains('hidden')) {
+                menu.classList.add('hidden');
+            }
+
+            const menuBtn = document.getElementById('menu-btn');
+            menuBtn.addEventListener('click', () => {
+                menu.classList.toggle('hidden');
+            });
+
+            // Ensure profile dropdown is hidden on load
+            const profileDropdown = document.getElementById('profile-dropdown');
+            if (!profileDropdown.classList.contains('hidden')) {
+                profileDropdown.classList.add('hidden');
+            }
+
+            const profileBtn = document.getElementById('profile-dropdown-btn');
+            profileBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                profileDropdown.classList.toggle('hidden');
+            });
+
+            // Close dropdown if clicking outside
+            document.addEventListener('click', (e) => {
+                if (!profileDropdown.classList.contains('hidden') && !profileDropdown.contains(e.target)) {
+                    profileDropdown.classList.add('hidden');
+                }
+            });
         });
     </script>
 </body>

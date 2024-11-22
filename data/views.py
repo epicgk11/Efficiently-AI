@@ -18,6 +18,38 @@ def registerUserView(request):
         createUser(user_data)
         return JsonResponse({'message': 'User registered successfully'})
 
+
+@csrf_exempt
+def additionalInfoView(request):
+    if request.method == 'POST':
+        print("Reached Here!!!!!")
+        id = request.headers.get('userId')
+        print(id)
+        existing_user = usersCollection.find_one({'userId':id})
+        if not existing_user:
+            return JsonResponse({"message":"userNotFound"})
+        data = json.loads(request.body)
+        addAdditionalInfo(userId=id,data=data)
+        return JsonResponse({"message":"Success"})
+
+@csrf_exempt
+def getAdditionalTaskView(request):
+    if request.method == 'GET':
+        userId = request.headers.get('userID')
+        if not userId:
+            return JsonResponse({'error': 'Unauthorized'}, status=401)
+        tasks = getAdditionalInfo(userId)
+        return JsonResponse({'additional_info': tasks})
+
+@csrf_exempt
+def getProfilePicView(request):
+    if request.method=="GET":
+        userId = request.headers.get('userID')
+        if not userId:
+            return JsonResponse({'error': 'Unauthorized'}, status=401)
+        pic = getProfilePic(userId)
+        return JsonResponse({'image bytes': pic})
+    
 @csrf_exempt
 def createTaskView(request):
     if request.method == 'POST':

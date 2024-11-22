@@ -1,0 +1,112 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Edit Profile{% endblock %}
+
+{% block extra_css %}
+<!-- Include Tailwind CSS -->
+<link href="https://unpkg.com/tailwindcss@^2.0/dist/tailwind.min.css" rel="stylesheet">
+<!-- Include JetBrains Mono Font -->
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel = "stylesheet" href="/static/app/css/profile.css">
+{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <h1 class="mb-8">Add more of your information</h1>
+    <form method="POST" action="{% url 'profileView' %}" enctype="multipart/form-data" class="bg-white p-8 rounded-lg shadow-lg max-w-2xl mx-auto">
+        {% csrf_token %}
+
+        <!-- Profile Image -->
+        <div class="flex flex-col items-center space-y-6 mb-8">
+            <div class="relative">
+                <img id="profile-preview" 
+                src="{{ user_data.profile_image }}" 
+                alt="Profile Picture" 
+                class="h-40 w-40 rounded-full shadow-lg object-cover border-4 border-green-500">
+           
+                <label for="profile-image" class="absolute bottom-0 right-0 bg-green-600 text-white p-2 rounded-full cursor-pointer hover:bg-green-700 transition">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M12 5l7 7-7 7" />
+                    </svg>
+                </label>
+                <input type="file" name="profile_image" id="profile-image" accept="image/*" class="hidden">
+            </div>
+            <span class="text-gray-600">Click the icon to upload a new profile picture</span>
+        </div>
+
+        <!-- Bio -->
+        <div class="field-container">
+            <label for="bio" class="label">Bio</label>
+            <textarea id="bio" name="bio" rows="4" placeholder="Tell us about yourself..." 
+                      class="input-like">{{ user_data.bio }}</textarea>
+        </div>
+
+        <!-- Commitments -->
+        <div class="field-container">
+            <label class="label">Commitments</label>
+            <div id="commitments-container" class="space-y-4">
+                {% for commitment in user_data.commitments %}
+                <div class="commitment flex flex-col md:flex-row gap-4 items-center">
+                    <input type="text" name="commitments[][name]" placeholder="Commitment Name" 
+                           value="{{ commitment.name }}" class="input-like flex-1">
+                    <input type="text" name="commitments[][time]" placeholder="e.g., 7pm - 8pm" 
+                           value="{{ commitment.time }}" class="input-like flex-1">
+                    <button type="button" class="remove-commitment">Remove</button>
+                </div>
+                {% endfor %}
+            </div>
+            </div>
+            <button type="button" id="add-commitment" 
+                    class="mt-4 bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg font-bold">
+                + Add Commitment
+            </button>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="text-center mt-8">
+            <button type="submit" 
+                    class="bg-green-600 hover:bg-green-700 text-white px-8 py-3 rounded-lg shadow-lg font-bold text-xl">
+                Save Profile
+            </button>
+        </div>
+    </form>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+    // Image Preview
+    const profileImageInput = document.getElementById('profile-image');
+    const profilePreview = document.getElementById('profile-preview');
+
+    profileImageInput.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            profilePreview.src = URL.createObjectURL(file);
+        }
+    });
+
+    // Dynamic Commitments
+    const commitmentsContainer = document.getElementById('commitments-container');
+    const addCommitmentButton = document.getElementById('add-commitment');
+
+    addCommitmentButton.addEventListener('click', () => {
+        const commitmentTemplate = `
+            <div class="commitment flex flex-col md:flex-row gap-4 items-center">
+                <input type="text" name="commitments[][name]" placeholder="Commitment Name" 
+                       class="input-like flex-1">
+                <input type="text" name="commitments[][time]" placeholder="e.g., 7pm - 8pm" 
+                       class="input-like flex-1">
+                <button type="button" class="remove-commitment">Remove</button>
+            </div>`;
+        commitmentsContainer.insertAdjacentHTML('beforeend', commitmentTemplate);
+    });
+
+    // Remove Commitment
+    commitmentsContainer.addEventListener('click', (e) => {
+        if (e.target.classList.contains('remove-commitment')) {
+            e.target.parentElement.remove();
+        }
+    });
+});
+</script>
+{% endblock %}
