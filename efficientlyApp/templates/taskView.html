@@ -1,14 +1,14 @@
 {% extends 'base.html' %}
-
+{% load static %}
 {% block title %}Efficiently AI - Update Task{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="/static/app/css/taskView.css">
+<link rel="stylesheet" href="{% static 'app/css/taskView.css' %}">
 {% endblock %}
 
 {% block content %}
 <div class="form-wrapper mt-8 mb-8 mx-auto px-4 lg:px-0">
-    <form id="task-form" action="#" method="POST" class="bg-white p-6 rounded-lg shadow-lg space-y-6">
+    <form id="task-form" action="#" method="POST" class="bg-white p-6 rounded-lg shadow-lg space-y-6 form-fixed-layout">
         {% csrf_token %}
         <!-- Task ID (Hidden) -->
         <input type="hidden" name="task_id" value="{{ task.id }}">
@@ -16,7 +16,7 @@
         <!-- Task Name -->
         <div class="field-container">
             <input id="task-name" type="text" name="name" value="{{ task.name }}" 
-                class="input-like text-3xl font-bold text-center placeholder-gray-400">
+                   class="input-like text-3xl font-bold text-center placeholder-gray-400">
         </div>
         <hr>
 
@@ -38,9 +38,12 @@
         <!-- Tags -->
         <div class="field-container">
             <label class="label">Tags</label>
-            <div id="tags-container" class="mb-2 flex flex-wrap gap-2">
+            <div id="tags-container" class="tags-container mb-4 flex flex-wrap gap-2">
                 {% for tag in task.tags %}
-                <span class="tag bg-green-600 text-white px-2 py-1 rounded">{{ tag }}</span>
+                <span class="tag bg-green-600 text-white px-2 py-1 rounded flex items-center gap-2">
+                    {{ tag }}
+                    <button type="button" class="remove-tag text-white bg-red-500 px-1 rounded">x</button>
+                </span>
                 {% endfor %}
             </div>
             <div class="flex gap-4">
@@ -49,7 +52,7 @@
                     + Add Tag
                 </button>
             </div>
-            <input type="hidden" name="tags" id="tags-input" value="{{ task.tags|join:', ' }}">
+            <input type="hidden" name="tags" id="tags-input" value="{{ task.tags|join:',' }}">
         </div>
         <hr>
 
@@ -66,25 +69,28 @@
             <label class="label">Steps</label>
             <div id="steps-container" class="steps-container space-y-4">
                 {% for step in task.steps %}
-                <div class="step flex items-center gap-4">
-                    <input type="hidden" name="step_completed[]" value="0">
-                    <input type="checkbox" name="step_completed[]" value="1" {% if step.completed %}checked{% endif %}>
+                <div class="step flex items-center gap-4 {% if step.completed %}completed{% endif %}">
+                    <label class="custom-checkbox">
+                        <input type="hidden" name="step_complete[]" value="0">
+                        <input type="checkbox" name="step_complete[]" value="1" {% if step.completed %}checked{% endif %}>
+                        <span class="checkbox-mark"></span>
+                    </label>
                     <input type="text" name="step_name[]" value="{{ step.name }}" placeholder="Step name" 
-                           class="input-like flex-1">
+                           class="input-like">
                     <input type="date" name="step_due_date[]" value="{{ step.due_date }}" class="input-like w-40">
                     <span class="remove-btn text-red-500 font-bold cursor-pointer">Remove</span>
                 </div>
                 {% endfor %}
             </div>
             <button id="add-step" type="button" 
-                    class="text-green-600 font-bold mt-2 bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded-lg">
+                    class="text-green-600 font-bold bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded-lg mt-4">
                 + Add Step
             </button>
         </div>
         <hr>
 
         <!-- Submit Button -->
-        <div class="text-center">
+        <div class="text-center mt-4">
             <button type="submit" 
                     class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg shadow-lg w-full sm:w-auto">
                 Save Task
@@ -93,18 +99,87 @@
     </form>
 </div>
 
-<script src="/static/app/js/taskView.js"></script>
 <script>
-    // Automatically resize all textareas based on their content
-    const textareas = document.querySelectorAll('textarea');
-    textareas.forEach((textarea) => {
-        textarea.style.height = 'auto';
-        textarea.style.height = `${textarea.scrollHeight}px`;
+    document.addEventListener("DOMContentLoaded", () => {
+        // Automatically resize textareas
+        document.querySelectorAll("textarea").forEach((textarea) => {
+            textarea.style.height = "auto";
+            textarea.style.height = `${textarea.scrollHeight}px`;
 
-        textarea.addEventListener('input', function () {
-            this.style.height = 'auto';
-            this.style.height = `${this.scrollHeight}px`;
+            textarea.addEventListener("input", function () {
+                this.style.height = "auto";
+                this.style.height = `${this.scrollHeight}px`;
+            });
+        });
+
+        // Tags Management
+        const tagsContainer = document.getElementById("tags-container");
+        const newTagInput = document.getElementById("new-tag");
+        const tagsInput = document.getElementById("tags-input");
+        const addTagButton = document.getElementById("add-tag");
+
+        const updateTagsValue = () => {
+            // Get all remaining tags and update the hidden input
+            const remainingTags = Array.from(tagsContainer.querySelectorAll(".tag"))
+                .map(tag => tag.textContent.trim().replace("x", "").trim());
+            tagsInput.value = remainingTags.join(",");
+        };
+
+        addTagButton.addEventListener("click", () => {
+            const tagValue = newTagInput.value.trim();
+            if (tagValue) {
+                const existingTags = tagsInput.value ? tagsInput.value.split(",") : [];
+                if (!existingTags.includes(tagValue)) {
+                    existingTags.push(tagValue);
+                    tagsInput.value = existingTags.join(",");
+                    tagsContainer.insertAdjacentHTML(
+                        "beforeend",
+                        `<span class="tag bg-green-600 text-white px-2 py-1 rounded flex items-center gap-2">
+                            ${tagValue}
+                            <button type="button" class="remove-tag text-white bg-red-500 px-1 rounded">x</button>
+                        </span>`
+                    );
+                    newTagInput.value = "";
+                }
+            }
+        });
+
+        tagsContainer.addEventListener("click", (e) => {
+            if (e.target.classList.contains("remove-tag")) {
+                const tagElement = e.target.parentElement;
+                tagElement.remove();
+                updateTagsValue(); // Update hidden input when a tag is removed
+            }
+        });
+
+        // Steps Management
+        const stepsContainer = document.getElementById("steps-container");
+        const addStepButton = document.getElementById("add-step");
+
+        addStepButton.addEventListener("click", () => {
+            const stepTemplate = `
+                <div class="step flex items-center gap-4">
+                    <label class="custom-checkbox">
+                        <input type="hidden" name="step_complete[]" value="0">
+                        <input type="checkbox" name="step_complete[]" value="1">
+                        <span class="checkbox-mark"></span>
+                    </label>
+                    <input type="text" name="step_name[]" placeholder="Step name" class="input-like">
+                    <input type="date" name="step_due_date[]" class="input-like w-40">
+                    <span class="remove-btn text-red-500 font-bold cursor-pointer">Remove</span>
+                </div>`;
+            stepsContainer.insertAdjacentHTML("beforeend", stepTemplate);
+        });
+
+        stepsContainer.addEventListener("click", (e) => {
+            if (e.target.classList.contains("remove-btn")) {
+                e.target.parentElement.remove();
+            } else if (e.target.type === "checkbox") {
+                const step = e.target.closest(".step");
+                step.classList.toggle("completed");
+            }
         });
     });
 </script>
+
 {% endblock %}

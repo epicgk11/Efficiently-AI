@@ -23,7 +23,7 @@ def login_view(request):
             return redirect('listtasks')
         else:
             messages.error(request, 'Invalid username or password')
-    print(request.user  )
+    print(request.user)
     return render(request, 'login.html')
 
 def registration(request):
@@ -46,6 +46,7 @@ def registration(request):
             path = f"{base_url}/data/register/"
             res = requests.post(path,headers=headers)
             if res.status_code==200:
+                login(request,user)
                 return redirect('profileView')
             else:
                 return render(request, 'register.html', {
@@ -117,6 +118,7 @@ def get_base_path(request):
         return
 
 def getuserData(request):
+        get_base_path(request)
         headers = {"userId": request.user.email}
         response = requests.get(f"{base_url}/data/getprofilepic/", headers=headers)
         profile_image = response.json().get('image bytes', None)
@@ -129,28 +131,39 @@ def getuserData(request):
                 "username":request.user.username}
 
 def createtask(request):
-    if request.method == 'POST':
-        get_base_path(request)
-        json_data = parse(request)
-        res = requests.post(f"{base_url}/data/create/",json = json_data)
-        if res.status_code == 200:
-            return redirect('listtasks')
-        else:
-            return JsonResponse({"message":"Error Occured"})
-    return render(request, 'createTask.html')
+    get_base_path(request)
+    if request.user.is_authenticated:
+        if request.method == 'POST':
+            headers = {
+                'userId':request.user.email
+            }
+            get_base_path(request)
+            json_data = parse(request)
+            res = requests.post(f"{base_url}/data/tasks/create/",headers = headers,json = json_data)
+            if res.status_code == 200:
+                return redirect('listtasks')
+            else:
+                return JsonResponse({"message":"Error Occured"})
+        data = {'user_data':getuserData(request)}
+        return render(request, 'createTask.html',context=data)
+    else:
+        return redirect("login")
 
 def listtasks(request):
+    get_base_path(request)
     if request.user.is_authenticated:
         headers = {
             "userId":request.user.email
         }
-        get_base_path(request)
         headers = {"userId": request.user.email}
         user_data = getuserData(request)
         print("Gotten user data")
         tasks = dict(requests.get(f"{base_url}/data/tasks/",headers=headers).json())
         data = {}
         data['tasks'] = tasks['tasks']
+        for index,task in enumerate(data['tasks']):
+            task['id'] = task.pop('_id')
+            data["tasks"][index] = task
         data['user_data'] = user_data
         return render(request,'home.html',context = data)
     else:
@@ -158,21 +171,35 @@ def listtasks(request):
 
 def deletetask(request,taskId):
     get_base_path(request)
-    res = requests.delete(f"{base_url}/data/delete/{taskId}/")
-    if res.status_code == 200:
-        return redirect('listtasks')
+    if request.user.is_authenticated:
+        headers = {'userId':request.user.email}
+        res = requests.delete(f"{base_url}/data/tasks/delete/{taskId}/",headers=headers)
+        if res.status_code == 200:
+            return redirect('listtasks')
+        else:
+            return JsonResponse({"message":"Error occured"})
     else:
-        return JsonResponse({"message":"Error occured"})
+        return redirect('login')
     
 def updatetask(request,taskId):
-    if request.method == "POST":
-        get_base_path(request)
-        dictData = parse(request)
-        requests.post(f"{base_url}/data/update/{taskId}/",json = dictData)
-        return redirect('listtasks')
-    res = requests.get(f"{base_url}/data/get/{taskId}")
-    context = {'task':res.json()['task']}
-    return render(request,'taskView.html',context=context)
+    get_base_path(request)
+    if request.user.is_authenticated:
+        headers = {
+                "userId":request.user.email
+            }
+        if request.method == "POST":
+            get_base_path(request)
+            dictData = parse(request)
+            print(dictData)
+            requests.post(f"{base_url}/data/tasks/update/{taskId}/",
+                          json = dictData,
+                          headers=headers)
+            return redirect('listtasks')
+        res = requests.get(f"{base_url}/data/tasks/{taskId}",headers = headers)
+        context = {'task':res.json()['task'],'user_data':getuserData(request)}
+        return render(request,'taskView.html',context=context)
+    else:
+        return redirect("login")
 
 
 

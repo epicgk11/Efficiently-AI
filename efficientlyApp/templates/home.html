@@ -55,5 +55,47 @@
     <p class="text-gray-600 text-center col-span-full">No tasks found.</p>
     {% endfor %}
 </div>
-<script src="/static/app/js/home.js"></script>
+
+
+
+<!-- Script  Section -->
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+    const searchInput = document.getElementById("task-search");
+    const tagFilter = document.getElementById("tag-filter");
+    const taskContainer = document.getElementById('task-container');
+    const tasks = Array.from(taskContainer.getElementsByClassName('task'));
+
+    const uniqueTags = new Set();
+    tasks.forEach(task => {
+        const tags = task.dataset.tags.split(',');
+        tags.forEach(tag => uniqueTags.add(tag.trim()));
+    });
+    uniqueTags.forEach(tag => {
+        const option = document.createElement('option');
+        option.value = tag;
+        option.textContent = tag;
+        tagFilter.appendChild(option);
+    });
+
+    const filterTasks = () => {
+        const query = searchInput.value;
+        const selectedTag = tagFilter.value;
+        taskContainer.innerHTML = '';
+
+        tasks
+            .filter(task => {
+                const matchesName = task.dataset.name.startsWith(query);
+                const matchesTag = !selectedTag || task.dataset.tags.split(',').map(tag => tag.trim()).includes(selectedTag);
+                return matchesName && matchesTag;
+            })
+            .forEach(task => taskContainer.appendChild(task));
+    };
+
+    searchInput.addEventListener('input', filterTasks);
+    tagFilter.addEventListener('change', filterTasks);
+});
+
+</script>
 {% endblock %}

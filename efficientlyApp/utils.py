@@ -3,7 +3,6 @@ import json
 def handlechecks(checklist):
     i = 0
     return_list = []
-    print(checklist)
     while(i<len(checklist)):
         if(i+1<len(checklist) and checklist[i+1]=="1"):
             return_list.append(True)
@@ -20,10 +19,12 @@ def parse(request):
     tags = request.POST.get('tags').split(",")
     resources = request.POST.get('resources')
     step_names = request.POST.getlist('step_name[]')
+    print(step_names)
     step_due_dates = request.POST.getlist('step_due_date[]')
-    step_completed = request.POST.getlist('step_completed[]')
-    step_completed = handlechecks(step_completed)
+    print(step_due_dates)
+    step_completed = request.POST.getlist('step_complete[]')
     print(step_completed)
+    step_completed = handlechecks(step_completed)
     steps = []
     for i in range(len(step_names)):
         completed = step_completed[i]

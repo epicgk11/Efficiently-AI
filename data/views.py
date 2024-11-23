@@ -90,6 +90,7 @@ def listTasksView(request):
  
 @csrf_exempt
 def getTaskView(request,taskId):
-    if request.method == "POST":
+    if request.method == "GET":
         userId = request.headers.get('userId')
-        return JsonResponse(getSpeceficTask(userId,taskId))
+        task = getSpeceficTask(userId,taskId)
+        return JsonResponse(task)
