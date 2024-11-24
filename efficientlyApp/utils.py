@@ -17,13 +17,12 @@ def parse(request):
     description = request.POST.get('description')
     due_date = request.POST.get('due_date')
     tags = request.POST.get('tags').split(",")
+    if tags==['']:
+        tags = []
     resources = request.POST.get('resources')
     step_names = request.POST.getlist('step_name[]')
-    print(step_names)
     step_due_dates = request.POST.getlist('step_due_date[]')
-    print(step_due_dates)
     step_completed = request.POST.getlist('step_complete[]')
-    print(step_completed)
     step_completed = handlechecks(step_completed)
     steps = []
     for i in range(len(step_names)):

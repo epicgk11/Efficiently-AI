@@ -137,7 +137,6 @@ def createtask(request):
             headers = {
                 'userId':request.user.email
             }
-            get_base_path(request)
             json_data = parse(request)
             res = requests.post(f"{base_url}/data/tasks/create/",headers = headers,json = json_data)
             if res.status_code == 200:
@@ -157,7 +156,6 @@ def listtasks(request):
         }
         headers = {"userId": request.user.email}
         user_data = getuserData(request)
-        print("Gotten user data")
         tasks = dict(requests.get(f"{base_url}/data/tasks/",headers=headers).json())
         data = {}
         data['tasks'] = tasks['tasks']
@@ -190,7 +188,6 @@ def updatetask(request,taskId):
         if request.method == "POST":
             get_base_path(request)
             dictData = parse(request)
-            print(dictData)
             requests.post(f"{base_url}/data/tasks/update/{taskId}/",
                           json = dictData,
                           headers=headers)

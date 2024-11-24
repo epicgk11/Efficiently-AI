@@ -22,9 +22,7 @@ def registerUserView(request):
 @csrf_exempt
 def additionalInfoView(request):
     if request.method == 'POST':
-        print("Reached Here!!!!!")
         id = request.headers.get('userId')
-        print(id)
         existing_user = usersCollection.find_one({'userId':id})
         if not existing_user:
             return JsonResponse({"message":"userNotFound"})

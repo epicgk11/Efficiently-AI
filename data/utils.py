@@ -13,7 +13,6 @@ def createUser(data):
 
 def addAdditionalInfo(userId, data):
     user = usersCollection.find_one({'userId': userId})
-    print(user)
     if user:
         bio = data.get('bio')
         profilePic = data.get('profilePic')
@@ -22,7 +21,6 @@ def addAdditionalInfo(userId, data):
         if bio is not None:
             update_fields['bio'] = bio
         if profilePic is not None:
-            print(profilePic)
             update_fields['profilePic'] = profilePic
         if new_commitments:
             update_fields['commitments'] = new_commitments
@@ -30,7 +28,6 @@ def addAdditionalInfo(userId, data):
             {'userId': userId},
             {'$set': update_fields}
         )
-        print(result)
         
         return {'matched': result.matched_count, 'modified': result.modified_count}
     else:
@@ -50,9 +47,7 @@ def getProfilePic(userId):
 
 
 def addTaskToUser(userId, task):
-    print(userId)
     user = usersCollection.find({'userId': userId})
-    print(user)
     if user:
         task['_id'] = str(ObjectId())
         result = usersCollection.update_one({'userId': userId}, {'$push': {'tasks': task}})
