@@ -1,0 +1,81 @@
+body {
+    font-family: 'JetBrains Mono', monospace;
+}
+
+.task {
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-align: center;
+    animation: fadeIn 0.5s ease-in-out;
+    color: #064e3b;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.form-container {
+    background: white;
+    padding: 3rem;
+    border-radius: 1rem;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 600px; 
+    width: 100%;
+    margin: 2rem auto;
+}
+
+h1 {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #064e3b;
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+p {
+    text-align: center;
+    color: #6b7280;
+    margin-bottom: 2rem;
+}
+
+.form-container input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    margin: 1rem 0; 
+    border: 2px solid #e5e7eb;
+    border-radius: 0.375rem;
+    font-size: 1.125rem; 
+    transition: border-color 0.2s;
+}
+
+.form-container input:focus {
+    border-color: #10b981;
+    outline: none;
+}
+
+.form-container button {
+    background: #10b981;
+    color: white;
+    padding: 1rem; 
+    width: 100%;
+    border-radius: 0.375rem;
+    font-size: 1.125rem;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+.form-container button:hover {
+    background: #059669;
+}
+
+#task-animation {
+    min-height: 40px; 
+    margin-bottom: 2rem; 
+}

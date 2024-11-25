@@ -167,7 +167,6 @@ def listtasks(request):
             task['id'] = task.pop('_id')
             data["tasks"][index] = task
         data['user_data'] = user_data
-        print(data)
         return render(request,'home.html',context = data)
     else:
         return redirect('login')

@@ -16,13 +16,13 @@
         <!-- Task Name -->
         <div class="field-container">
             <input id="task-name" type="text" name="name" value="{{ task.name }}" 
-                   class="input-like text-5xl font-extrabold text-center placeholder-gray-400 py-4 px-6">
+                   class="input-like text-5xl font-extrabold text-center placeholder-gray-400 py-4 px-6" style="font-size: 45px;">
         </div>
         <hr>
 
         <!-- Description -->
         <div class="field-container">
-            <label for="task-description" class="label">Description</label>
+            <label for="task-description" class="label" style="font-size: 30px;">Description</label>
             <textarea id="task-description" name="description" 
                       class="input-like resize-none" rows="1">{{ task.description }}</textarea>
         </div>
@@ -30,14 +30,14 @@
 
         <!-- Due Date -->
         <div class="field-container">
-            <label for="task-due-date" class="label">Due Date</label>
+            <label for="task-due-date" class="label" style="font-size: 30px;">Due Date</label>
             <input id="task-due-date" type="date" name="due_date" value="{{ task.due_date }}" class="input-like">
         </div>
         <hr>
 
         <!-- Tags -->
         <div class="field-container">
-            <label class="label">Tags</label>
+            <label class="label" style="font-size: 30px;">Tags</label>
             <div id="tags-container" class="tags-container mb-4 flex flex-wrap gap-2">
                 {% for tag in task.tags %}
                 <span class="tag bg-green-600 text-white px-2 py-1 rounded flex items-center gap-2">
@@ -58,7 +58,7 @@
 
         <!-- Resources -->
         <div class="field-container">
-            <label for="task-resources" class="label">Resources</label>
+            <label for="task-resources" class="label" style="font-size: 30px;">Resources</label>
             <textarea id="task-resources" name="resources" 
                       class="input-like resize-none" rows="1">{{ task.resources }}</textarea>
         </div>
@@ -66,10 +66,10 @@
 
         <!-- Steps -->
         <div class="field-container">
-            <label class="label">Steps</label>
+            <label class="label" style="font-size: 30px;">Steps</label>
             <div id="steps-container" class="steps-container space-y-4">
                 {% for step in task.steps %}
-                <div class="step flex items-center gap-4 {% if step.completed %}completed{% endif %}">
+                <div class="step flex items-center gap-4 {% if step.completed %}completed{% endif %}" draggable="true">
                     <label class="custom-checkbox">
                         <input type="hidden" name="step_complete[]" value="0">
                         <input type="checkbox" name="step_complete[]" value="1" {% if step.completed %}checked{% endif %}>
@@ -98,7 +98,7 @@
         </div>
     </form>
 </div>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
 <script>
     document.addEventListener("DOMContentLoaded", () => {
         // Automatically resize textareas
@@ -119,7 +119,6 @@
         const addTagButton = document.getElementById("add-tag");
 
         const updateTagsValue = () => {
-            // Get all remaining tags and update the hidden input
             const remainingTags = Array.from(tagsContainer.querySelectorAll(".tag"))
                 .map(tag => tag.textContent.trim().replace("x", "").trim());
             tagsInput.value = remainingTags.join(",");
@@ -148,17 +147,25 @@
             if (e.target.classList.contains("remove-tag")) {
                 const tagElement = e.target.parentElement;
                 tagElement.remove();
-                updateTagsValue(); // Update hidden input when a tag is removed
+                updateTagsValue();
             }
         });
 
-        // Steps Management
+        // Steps Management with Drag-and-Drop
         const stepsContainer = document.getElementById("steps-container");
         const addStepButton = document.getElementById("add-step");
 
+        new Sortable(stepsContainer, {
+            animation: 200, // Smooth movement
+            swapThreshold: 0.65, // Trigger swap when items are closer
+            ghostClass: 'sortable-ghost', // Highlight for the dragged item
+            chosenClass: 'sortable-chosen', // Class for the selected item
+            dragClass: 'sortable-drag', // Class during dragging
+        });
+
         addStepButton.addEventListener("click", () => {
             const stepTemplate = `
-                <div class="step flex items-center gap-4">
+                <div class="step flex items-center gap-4" draggable="true">
                     <label class="custom-checkbox">
                         <input type="hidden" name="step_complete[]" value="0">
                         <input type="checkbox" name="step_complete[]" value="1">
@@ -181,5 +188,4 @@
         });
     });
 </script>
-
 {% endblock %}

@@ -120,3 +120,35 @@ body {
 .steps-container .remove-btn:hover {
     text-decoration: underline;
 }
+
+.sortable-ghost {
+    opacity: 0;
+    background-color: #f3f4f6; /* Light gray background during drag */
+    border: 2px dashed #10c875; /* Dashed border to show drag effect */
+}
+
+
+.steps-container .step {
+    transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.sortable-chosen {
+    opacity: 0.8;
+    transform: scale(1.02);
+    background-color: #e0ffe6;
+}
+
+.sortable-ghost {
+    opacity: 0.5;
+    background-color: transparent;
+}
+
+.sortable-drag {
+    opacity: 1 !important;
+}
+
+/* Highlight the new position */
+.steps-container .step:not(.sortable-chosen) {
+    transform: translateY(0);
+    opacity: 1;
+}

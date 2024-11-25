@@ -18,7 +18,6 @@ def registerUserView(request):
         createUser(user_data)
         return JsonResponse({'message': 'User registered successfully'})
 
-
 @csrf_exempt
 def additionalInfoView(request):
     if request.method == 'POST':

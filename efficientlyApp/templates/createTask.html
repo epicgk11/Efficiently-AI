@@ -10,36 +10,33 @@
 <div class="form-wrapper mt-8 mb-8 mx-auto px-4 lg:px-0">
     <form id="task-form" action="#" method="POST" class="bg-white p-6 rounded-lg shadow-lg space-y-6 form-fixed-layout">
         {% csrf_token %}
-        <!-- Task ID (Hidden) -->
-        <input type="hidden" name="task_id">
 
         <!-- Task Name -->
         <div class="field-container">
-            <input id="task-name" type="text" name="name" placeholder="Name"
-                   class="input-like text-3xl font-bold text-center placeholder-gray-400">
+            <input id="task-name" type="text" name="name" placeholder="Enter a name"
+                   class="input-like text-5xl font-extrabold text-center placeholder-gray-400 py-4 px-6" style="font-size: 45px;">
         </div>
         <hr>
 
         <!-- Description -->
         <div class="field-container">
-            <label for="task-description" class="label">Description</label>
-            <textarea id="task-description" name="description" 
-                      class="input-like resize-none" rows="1" placeholder="Enter a description"></textarea>
+            <label for="task-description" class="label" style="font-size: 30px;">Description</label>
+            <textarea id="task-description" name="description" placeholder="Enter some details" 
+                      class="input-like resize-none" rows="1"></textarea>
         </div>
         <hr>
 
         <!-- Due Date -->
         <div class="field-container">
-            <label for="task-due-date" class="label">Due Date</label>
-            <input id="task-due-date" type="date" name="due_date" class="input-like">
+            <label for="task-due-date" class="label" style="font-size: 30px;">Due Date</label>
+            <input id="task-due-date" type="date" name="due_date"  class="input-like">
         </div>
         <hr>
 
         <!-- Tags -->
         <div class="field-container">
-            <label class="label">Tags</label>
+            <label class="label" style="font-size: 30px;">Tags</label>
             <div id="tags-container" class="tags-container mb-4 flex flex-wrap gap-2">
-
             </div>
             <div class="flex gap-4">
                 <input type="text" id="new-tag" class="input-like flex-1" placeholder="Add a tag">
@@ -47,14 +44,13 @@
                     + Add Tag
                 </button>
             </div>
-            <!-- Tags input field starts empty -->
-            <input type="hidden" name="tags" id="tags-input" value="">
+            <input type="hidden" name="tags" id="tags-input">
         </div>
         <hr>
 
         <!-- Resources -->
         <div class="field-container">
-            <label for="task-resources" class="label">Resources</label>
+            <label for="task-resources" class="label" style="font-size: 30px;">Resources</label>
             <textarea id="task-resources" name="resources" 
                       class="input-like resize-none" rows="1" placeholder="Enter some resources"></textarea>
         </div>
@@ -62,9 +58,8 @@
 
         <!-- Steps -->
         <div class="field-container">
-            <label class="label">Steps</label>
+            <label class="label" style="font-size: 30px;">Steps</label>
             <div id="steps-container" class="steps-container space-y-4">
-                </div>
             </div>
             <button id="add-step" type="button" 
                     class="text-green-600 font-bold bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded-lg mt-4">
@@ -76,13 +71,13 @@
         <!-- Submit Button -->
         <div class="text-center mt-4">
             <button type="submit" 
-                    class="bg-gradient-to-r from-blue-500 via-teal-500 to-green-500 hover:from-blue-600 hover:via-teal-600 hover:to-green-600 text-white px-6 py-3 rounded-lg shadow-lg w-full sm:w-auto transition duration-300 ease-in-out transform hover:scale-105">
-                Create
+                    class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg shadow-lg w-full sm:w-auto">
+                Create Task
             </button>
         </div>
     </form>
 </div>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
 <script>
     document.addEventListener("DOMContentLoaded", () => {
         // Automatically resize textareas
@@ -103,7 +98,6 @@
         const addTagButton = document.getElementById("add-tag");
 
         const updateTagsValue = () => {
-            // Get all remaining tags and update the hidden input
             const remainingTags = Array.from(tagsContainer.querySelectorAll(".tag"))
                 .map(tag => tag.textContent.trim().replace("x", "").trim());
             tagsInput.value = remainingTags.join(",");
@@ -132,17 +126,25 @@
             if (e.target.classList.contains("remove-tag")) {
                 const tagElement = e.target.parentElement;
                 tagElement.remove();
-                updateTagsValue(); // Update hidden input when a tag is removed
+                updateTagsValue();
             }
         });
 
-        // Steps Management
+        // Steps Management with Drag-and-Drop
         const stepsContainer = document.getElementById("steps-container");
         const addStepButton = document.getElementById("add-step");
 
+        new Sortable(stepsContainer, {
+            animation: 200, // Smooth movement
+            swapThreshold: 0.65, // Trigger swap when items are closer
+            ghostClass: 'sortable-ghost', // Highlight for the dragged item
+            chosenClass: 'sortable-chosen', // Class for the selected item
+            dragClass: 'sortable-drag', // Class during dragging
+        });
+
         addStepButton.addEventListener("click", () => {
             const stepTemplate = `
-                <div class="step flex items-center gap-4">
+                <div class="step flex items-center gap-4" draggable="true">
                     <label class="custom-checkbox">
                         <input type="hidden" name="step_complete[]" value="0">
                         <input type="checkbox" name="step_complete[]" value="1">
@@ -165,5 +167,4 @@
         });
     });
 </script>
-
 {% endblock %}
