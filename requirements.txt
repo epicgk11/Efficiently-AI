@@ -5,3 +5,4 @@ groq
 langchain-groq
 pymongo
 cryptography
+pillow

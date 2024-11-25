@@ -6,7 +6,6 @@ usersCollection = mongo.getCollection('users')
 def createUser(data):
     data['tasks']=[]
     data['bio']=None
-    data['profilePic'] = None
     data['commitments'] = []
     user_id = usersCollection.insert_one(data).inserted_id
     return user_id
@@ -15,13 +14,10 @@ def addAdditionalInfo(userId, data):
     user = usersCollection.find_one({'userId': userId})
     if user:
         bio = data.get('bio')
-        profilePic = data.get('profilePic')
         new_commitments = data.get('commitments', [])
         update_fields = {}
         if bio is not None:
             update_fields['bio'] = bio
-        if profilePic is not None:
-            update_fields['profilePic'] = profilePic
         if new_commitments:
             update_fields['commitments'] = new_commitments
         result = usersCollection.update_one(
@@ -37,13 +33,8 @@ def getAdditionalInfo(userId):
     user = usersCollection.find_one({'userId': userId})
     return {
         'bio':user.get('bio',None),
-        'image bytes':user.get('profilePic',None),
         'commitments':user.get('commitments',[])
     }
-
-def getProfilePic(userId):
-    user = usersCollection.find_one({'userId': userId})
-    return user.get('profilePic',None)
 
 
 def addTaskToUser(userId, task):

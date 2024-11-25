@@ -10,5 +10,4 @@ urlpatterns = [
     path('tasks/<str:taskId>/',getTaskView,name='getSpeceficTask'),
     path('addinfo/',additionalInfoView,name='aditionalinfo'),
     path('getaddinfo/',getAdditionalTaskView,name='getaddinfo'),
-    path('getprofilepic/',getProfilePicView,name='getprofilepic')
 ]

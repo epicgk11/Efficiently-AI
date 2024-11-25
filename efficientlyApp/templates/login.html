@@ -1,15 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    {% load static %}
     <title>Login</title>
     <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="/static/css/login.css">
     <script>
         document.addEventListener("DOMContentLoaded", () => {
             const tasks = [
-                "Welcome to efficiency...",
+                "Welcome to efficiently...",
                 "Move forward and complete tasks",
-                "Lets convert dreams into reality"
+                "Let's convert dreams into reality"
             ];
             const taskContainer = document.getElementById("task-animation");
             let index = 0;
@@ -22,10 +23,10 @@
                     if (charIndex < task.length) {
                         container.textContent += task[charIndex];
                         charIndex++;
-                        setTimeout(type, 100); // Typing speed
+                        setTimeout(type, 100);
                     } else {
                         isTyping = false;
-                        setTimeout(deleteText, 1000); // Delay before deleting
+                        setTimeout(deleteText, 1000);
                     }
                 }
 
@@ -33,7 +34,7 @@
                     if (charIndex > 0) {
                         container.textContent = task.substring(0, charIndex - 1);
                         charIndex--;
-                        setTimeout(deleteText, 50); // Backspacing speed
+                        setTimeout(deleteText, 50);
                     } else {
                         isTyping = true;
                         callback();
@@ -47,112 +48,36 @@
 
             function displayTasks() {
                 if (index >= tasks.length) {
-                    index = 0; // Reset for looping
+                    index = 0; 
                 }
 
                 const taskElement = document.createElement("div");
                 taskElement.className = "task";
-                taskContainer.innerHTML = ""; // Clear previous task
+                taskContainer.innerHTML = "";
                 taskContainer.appendChild(taskElement);
 
                 typeAndDeleteTask(tasks[index], taskElement, () => {
                     index++;
-                    setTimeout(displayTasks, 500); // Delay before next task
+                    setTimeout(displayTasks, 500);
                 });
             }
 
             displayTasks();
         });
     </script>
-    <style>
-        body {
-            font-family: 'JetBrains Mono', monospace;
-        }
-
-        .task {
-            font-size: 1.5rem;
-            font-weight: bold;
-            text-align: center;
-            animation: fadeIn 0.5s ease-in-out;
-            color: #064e3b; /* Primary green */
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(-10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .form-container {
-            background: white;
-            padding: 3rem; /* Increased padding */
-            border-radius: 1rem;
-            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-            max-width: 600px; /* Increased width */
-            width: 100%;
-            margin: 2rem auto; /* Added spacing */
-        }
-
-        h1 {
-            font-size: 2.5rem;
-            font-weight: bold;
-            color: #064e3b;
-            text-align: center;
-            margin-bottom: 1.5rem;
-        }
-
-        p {
-            text-align: center;
-            color: #6b7280;
-            margin-bottom: 2rem;
-        }
-
-        .form-container input {
-            width: 100%;
-            padding: 0.75rem 1rem; /* Increased padding */
-            margin: 1rem 0; /* Added spacing */
-            border: 2px solid #e5e7eb;
-            border-radius: 0.375rem;
-            font-size: 1.125rem; /* Slightly larger font size */
-            transition: border-color 0.2s;
-        }
-
-        .form-container input:focus {
-            border-color: #10b981;
-            outline: none;
-        }
-
-        .form-container button {
-            background: #10b981;
-            color: white;
-            padding: 1rem; /* Increased padding */
-            width: 100%;
-            border-radius: 0.375rem;
-            font-size: 1.125rem; /* Slightly larger font size */
-            font-weight: bold;
-            transition: background-color 0.3s;
-        }
-
-        .form-container button:hover {
-            background: #059669;
-        }
-
-        #task-animation {
-            min-height: 40px; /* Ensures space for the animation block */
-            margin-bottom: 2rem; /* Added spacing below the animation */
-        }
-    </style>
+    <link rel="stylesheet" href="{% static 'app/css/login.css' %}">
 </head>
 <body class="bg-green-600 flex items-center justify-center min-h-screen">
     <div class="form-container">
         <h1>Welcome Back!</h1>
         <p>Log in to manage your tasks efficiently.</p>
         <div id="task-animation"></div>
+
+        <!-- Error Message -->
+        {% if error %}
+        <div class="error-message">{{ error }}</div>
+        {% endif %}
+
         <form method="POST" action="{% url 'login' %}">
             {% csrf_token %}
             <div>

@@ -1,0 +1,31 @@
+.email-truncate {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 125px; /* Adjust as per the design */
+}
+
+/* Dynamically extend the dropdown width for long emails */
+#profile-dropdown {
+    min-width: 250px; /* Ensure a base width */
+    max-width: 1000px; /* Set a reasonable maximum */
+}
+
+.tooltip {
+    display: none;
+    position: absolute;
+    top: -1.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(0, 0, 0, 0.75);
+    color: #fff;
+    padding: 0.5rem;
+    border-radius: 0.25rem;
+    font-size: 0.875rem;
+    white-space: nowrap;
+    z-index: 100;
+}
+
+.email-hover:hover .tooltip {
+    display: block;
+}

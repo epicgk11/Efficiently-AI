@@ -38,15 +38,6 @@ def getAdditionalTaskView(request):
             return JsonResponse({'error': 'Unauthorized'}, status=401)
         tasks = getAdditionalInfo(userId)
         return JsonResponse({'additional_info': tasks})
-
-@csrf_exempt
-def getProfilePicView(request):
-    if request.method=="GET":
-        userId = request.headers.get('userID')
-        if not userId:
-            return JsonResponse({'error': 'Unauthorized'}, status=401)
-        pic = getProfilePic(userId)
-        return JsonResponse({'image bytes': pic})
     
 @csrf_exempt
 def createTaskView(request):

@@ -2,18 +2,20 @@ from django.shortcuts import render,redirect
 from django.http import JsonResponse
 from .utils import parse
 import requests
-from .forms import CustomUserRegistrationForm
 from django.contrib.auth import login,authenticate,logout
 from django.contrib import messages
 from .models import CustomUser
-import base64
-from django.core.files.base import ContentFile
 import json
+from django.core.exceptions import ValidationError
+from django.core.validators import validate_email
+from django.contrib.auth.password_validation import validate_password
+
 base_url = f""
 
 # Account Views
 
 def login_view(request):
+    error = None
     if request.method == 'POST':
         username = request.POST['username']
         password = request.POST['password']
@@ -22,9 +24,8 @@ def login_view(request):
             login(request, user)
             return redirect('listtasks')
         else:
-            messages.error(request, 'Invalid username or password')
-    print(request.user)
-    return render(request, 'login.html')
+            error = "Invalid email or password."
+    return render(request, 'login.html', {'error': error})
 
 def registration(request):
     get_base_path(request)
@@ -33,29 +34,43 @@ def registration(request):
         username = request.POST.get('username')
         password1 = request.POST.get('password1')
         password2 = request.POST.get('password2')
+        errors = []
+        try:
+            validate_email(email)
+        except ValidationError:
+            errors.append("Invalid email format.")
         if password1 != password2:
-            return render(request, 'register.html', {
-                'error': "Passwords do not match."
-            })
+            errors.append("Passwords do not match.")
+        else:
+            try:
+                validate_password(password1)
+            except ValidationError as e:
+                errors.extend(e.messages)
+        if CustomUser.objects.filter(username=username).exists():
+            errors.append("Username already exists.")
+        if CustomUser.objects.filter(email=email).exists():
+            errors.append("Email already registered.")
 
+        if errors:
+            return render(request, 'register.html', {
+                'error': errors,
+                'email': email,
+                'username': username
+            })
         try:
             user = CustomUser.objects.create_user(email=email, username=username, password=password1)
-            headers = {
-                "userId":email
-            }
+            headers = {"userId": email}
             path = f"{base_url}/data/register/"
-            res = requests.post(path,headers=headers)
-            if res.status_code==200:
-                login(request,user)
+            res = requests.post(path, headers=headers)
+            if res.status_code == 200:
+                login(request, user)
                 return redirect('profileView')
             else:
-                return render(request, 'register.html', {
-                    'error': "Error occured Please register again!!",
-                })            
+                errors.append("Error occurred. Please register again.")
         except Exception as e:
-            return render(request, 'register.html', {
-                'error': str(e),
-            })
+            errors.append(str(e))
+
+        return render(request, 'register.html', {'error': errors, 'email': email, 'username': username})
 
     return render(request, 'register.html')
 
@@ -68,30 +83,24 @@ def profile_view(request):
             commitments = request.POST.getlist("commitments[][name]")
             commitment_times = request.POST.getlist("commitments[][time]")
 
-            bs4_image_encoded = None
             if profile_image:
-                # Ensure proper encoding
-                file_content = profile_image.read()
-                bs4_image_encoded = base64.b64encode(file_content).decode('utf-8')
+                request.user.profile_pic = profile_image
+            request.user.save()
 
             data = {
                 "bio": bio,
-                "profilePic": bs4_image_encoded,
                 "commitments": [{"name": name, "time": time} for name, time in zip(commitments, commitment_times)],
             }
 
             headers = {'userId': request.user.email}
             requests.post(f"{base_url}/data/addinfo/", data=json.dumps(data), headers=headers)
-            return redirect("profileView")
+            return redirect("listtasks")
 
         headers = {"userId": request.user.email}
         response = requests.get(f"{base_url}/data/getaddinfo", headers=headers)
         additional_info = response.json().get('additional_info', {})
-        profile_image = additional_info.get('image bytes', None)
-        if profile_image:
-            profile_image = f"data:image/png;base64,{profile_image}"
-        else:
-            profile_image = "https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/Avatar_icon_green.svg/2048px-Avatar_icon_green.svg.png"
+        profile_image = request.user.profile_pic.url if request.user.profile_pic else "https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/Avatar_icon_green.svg/2048px-Avatar_icon_green.svg.png"
+
 
         user_data = {
             "username": request.user.username,
@@ -120,12 +129,7 @@ def get_base_path(request):
 def getuserData(request):
         get_base_path(request)
         headers = {"userId": request.user.email}
-        response = requests.get(f"{base_url}/data/getprofilepic/", headers=headers)
-        profile_image = response.json().get('image bytes', None)
-        if profile_image:
-            profile_image = f"data:image/png;base64,{profile_image}"
-        else:
-            profile_image = "https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/Avatar_icon_green.svg/2048px-Avatar_icon_green.svg.png"
+        profile_image = request.user.profile_pic.url if request.user.profile_pic else "https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/Avatar_icon_green.svg/2048px-Avatar_icon_green.svg.png"
         return {"profile_image":profile_image,
                 "email":request.user.email,
                 "username":request.user.username}
@@ -163,6 +167,7 @@ def listtasks(request):
             task['id'] = task.pop('_id')
             data["tasks"][index] = task
         data['user_data'] = user_data
+        print(data)
         return render(request,'home.html',context = data)
     else:
         return redirect('login')
