@@ -94,6 +94,7 @@ body {
 
 
 /* Steps Styling */
+
 .steps-container .step {
     display: flex;
     gap: 1rem;
@@ -113,7 +114,9 @@ body {
     text-decoration: line-through;
     color: #888;
 }
-
+.steps-container .step.completed input[type="text"]{
+    min-height: 1rem;
+}
 .steps-container .custom-checkbox {
     display: flex;
     align-items: center;
@@ -190,3 +193,4 @@ body {
     transform: translateY(0);
     opacity: 1;
 }
+

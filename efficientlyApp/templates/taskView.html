@@ -75,8 +75,8 @@
                         <input type="checkbox" name="step_complete[]" value="1" {% if step.completed %}checked{% endif %}>
                         <span class="checkbox-mark"></span>
                     </label>
-                    <input type="text" name="step_name[]" placeholder="Step name" 
-                           class="input-like" value="{{ step.name }}">
+                    <textarea type="text" name="step_name[]" placeholder="Step name" 
+                           class="input-like" id="task-name">{{ step.name }}</textarea>
                     <input type="date" name="step_due_date[]" value="{{ step.due_date }}" class="input-like w-40">
                     <span class="remove-btn text-red-500 font-bold cursor-pointer">Remove</span>
                 </div>
@@ -171,7 +171,7 @@
                         <input type="checkbox" name="step_complete[]" value="1">
                         <span class="checkbox-mark"></span>
                     </label>
-                    <input type="text" name="step_name[]" placeholder="Step name" class="input-like">
+                    <textarea type="text" id="task-name" name="step_name[]" placeholder="Step name" class="input-like"></textarea>
                     <input type="date" name="step_due_date[]" class="input-like w-40">
                     <span class="remove-btn text-red-500 font-bold cursor-pointer">Remove</span>
                 </div>`;
