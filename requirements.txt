@@ -1,8 +1,6 @@
 django
 jupyterlab
-djangorestframework
 groq
 langchain-groq
 pymongo
-cryptography
 pillow
