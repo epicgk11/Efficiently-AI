@@ -13,16 +13,18 @@
 
         <!-- Task Name -->
         <div class="field-container">
-            <input id="task-name" type="text" name="name" placeholder="Enter a name"
-                   class="input-like text-5xl font-extrabold text-center placeholder-gray-400 py-4 px-6" style="font-size: 45px;">
+            <input id="task-name" type="text" name="name" 
+            class="input-like text-5xl font-extrabold text-center placeholder-gray-400 py-4 px-6" style="font-size: 38px;"
+            placeholder="Enter a name">
+        
         </div>
         <hr>
 
         <!-- Description -->
         <div class="field-container">
             <label for="task-description" class="label" style="font-size: 30px;">Description</label>
-            <textarea id="task-description" name="description" placeholder="Enter some details" 
-                      class="input-like resize-none" rows="1"></textarea>
+            <textarea id="task-description" name="description" 
+                      class="input-like resize-none" rows="1" placeholder="Enter some description"></textarea>
         </div>
         <hr>
 
@@ -44,7 +46,7 @@
                     + Add Tag
                 </button>
             </div>
-            <input type="hidden" name="tags" id="tags-input">
+            <input type="hidden" name="tags" id="tags-input" value="{{ task.tags|join:',' }}">
         </div>
         <hr>
 
@@ -52,7 +54,8 @@
         <div class="field-container">
             <label for="task-resources" class="label" style="font-size: 30px;">Resources</label>
             <textarea id="task-resources" name="resources" 
-                      class="input-like resize-none" rows="1" placeholder="Enter some resources"></textarea>
+                      class="input-like resize-none" rows="1"
+                      placeholder="Enter some resources"></textarea>
         </div>
         <hr>
 
@@ -72,7 +75,7 @@
         <div class="text-center mt-4">
             <button type="submit" 
                     class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg shadow-lg w-full sm:w-auto">
-                Create Task
+                Save Task
             </button>
         </div>
     </form>
