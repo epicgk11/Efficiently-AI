@@ -1,9 +1,9 @@
 {% extends 'base.html' %}
 
 {% block title %}Efficiently AI - Home{% endblock %}
-
+{% load static %}
 {% block extra_css %}
-<link rel="stylesheet" href="/static/app/css/home.css">
+<link rel="stylesheet" href="{% static 'app/css/home.css' %}">
 {% endblock %}
 
 {% block content %}

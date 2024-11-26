@@ -156,11 +156,11 @@
         const addStepButton = document.getElementById("add-step");
 
         new Sortable(stepsContainer, {
-            animation: 200, // Smooth movement
-            swapThreshold: 0.65, // Trigger swap when items are closer
-            ghostClass: 'sortable-ghost', // Highlight for the dragged item
-            chosenClass: 'sortable-chosen', // Class for the selected item
-            dragClass: 'sortable-drag', // Class during dragging
+            animation: 200, 
+            swapThreshold: 0.65, 
+            ghostClass: 'sortable-ghost', 
+            chosenClass: 'sortable-chosen', 
+            dragClass: 'sortable-drag',
         });
 
         addStepButton.addEventListener("click", () => {
