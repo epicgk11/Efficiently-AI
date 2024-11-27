@@ -13,7 +13,6 @@ from django.middleware.csrf import get_token
 
 base_url = f""
 
-
 def login_view(request):
     error = None
     if request.method == 'POST':
@@ -93,12 +92,12 @@ def profile_view(request):
             }
 
             headers = {'userId': request.user.email}
-            requests.post(f"{base_url}/data/addinfo/", data=json.dumps(data), headers=headers)
+            requests.post(f"{base_url}/data/v2/additionalInfo/", json=data, headers=headers)
             return redirect("listtasks")
 
         headers = {"userId": request.user.email}
-        response = requests.get(f"{base_url}/data/getaddinfo", headers=headers)
-        additional_info = response.json().get('additional_info', {})
+        response = requests.get(f"{base_url}/data/v2/additionalInfo/", headers=headers)
+        additional_info = response.json()
         profile_image = request.user.profile_pic.url if request.user.profile_pic else "https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/Avatar_icon_green.svg/2048px-Avatar_icon_green.svg.png"
 
 
@@ -131,7 +130,6 @@ def getuserData(request):
                 "email":request.user.email,
                 "username":request.user.username}
 
-
 def createtask(request):
     get_base_path(request)
     if request.user.is_authenticated:
@@ -142,14 +140,11 @@ def createtask(request):
                 'userId': request.user.email,
             }
             json_data = parse(request)
-            res = requests.post(f"{base_url}/data/tasks/create/", headers=headers, json=json_data)
+            res = requests.post(f"{base_url}/data/v2/tasks/create/", headers=headers, json=json_data)
             if res.status_code == 200:
                 return redirect('listtasks')
             else:
-                return JsonResponse({
-                    "status_code": res.status_code,
-                    "message": "Error Occurred"
-                })
+                return JsonResponse(res.json())
         data = {'user_data': getuserData(request)}
         return render(request, 'createTask.html', context=data)
     else:
@@ -163,7 +158,7 @@ def listtasks(request):
         }
         headers = {"userId": request.user.email}
         user_data = getuserData(request)
-        tasks = dict(requests.get(f"{base_url}/data/tasks/",headers=headers).json())
+        tasks = dict(requests.get(f"{base_url}/data/v2/tasks/list/",headers=headers).json())
         data = {}
         data['tasks'] = tasks['tasks']
         for index,task in enumerate(data['tasks']):
@@ -178,11 +173,11 @@ def deletetask(request,taskId):
     get_base_path(request)
     if request.user.is_authenticated:
         headers = {'userId':request.user.email}
-        res = requests.delete(f"{base_url}/data/tasks/delete/{taskId}/",headers=headers)
+        res = requests.delete(f"{base_url}/data/v2/tasks/{taskId}/",headers=headers)
         if res.status_code == 200:
             return redirect('listtasks')
         else:
-            return JsonResponse({"message":"Error occured"})
+            return JsonResponse(res.json())
     else:
         return redirect('login')
     
@@ -195,11 +190,11 @@ def updatetask(request,taskId):
         if request.method == "POST":
             get_base_path(request)
             dictData = parse(request)
-            requests.post(f"{base_url}/data/tasks/update/{taskId}/",
+            requests.put(f"{base_url}/data/v2/tasks/{taskId}/",
                           json = dictData,
                           headers=headers)
             return redirect('listtasks')
-        res = requests.get(f"{base_url}/data/tasks/{taskId}",headers = headers)
+        res = requests.get(f"{base_url}/data/v2/tasks/{taskId}",headers = headers)
         context = {'task':res.json()['task'],'user_data':getuserData(request)}
         return render(request,'taskView.html',context=context)
     else:

@@ -2,11 +2,11 @@ import requests
 
 headers = {
     "Content-Type": "application/json",
-    "userId": "asdsasaasdsadfsaqw"
+    "userId": "harisankar1603@gmail.com"
 }
 
-res = requests.post(
-            "http://localhost:8000/data/tasks/673f87b26b7d8fd9b21da76f/",
+res = requests.get(
+            "http://localhost:8000/data/v2/tasks/67454daee656fc1135741440/",
             headers = headers
             )
 

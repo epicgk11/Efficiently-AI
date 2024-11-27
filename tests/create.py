@@ -1,9 +1,8 @@
 import requests
 import json
 
-dummy_encrypted_id = "asdsasaasdsadfsaqw"
 
-url = "http://localhost:8000/data/tasks/create/"
+url = "http://localhost:8000/data/v2/tasks/create/"
 
 task_data = {
     "name": "Complete Project Report",
@@ -18,7 +17,7 @@ task_data = {
 
 headers = {
     "Content-Type": "application/json",
-    "userId": dummy_encrypted_id
+    "userId": "sample"
 }
 
 response = requests.post(url, data=json.dumps(task_data), headers=headers)

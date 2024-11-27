@@ -15,12 +15,12 @@ task_data = {
 
 headers = {
     "Content-Type": "application/json",
-    "userId": "asdsasaasdsadfsaqw"
+    "userId": "sample"
 }
 
-res = requests.post(
-            "http://localhost:8000/data/tasks/update/673f7a21c62975c49ddca1e0/",
-            data = json.dumps(task_data),
+res = requests.put(
+            "http://localhost:8000/data/v2/tasks/673f7a21c62975c49ddca1e0/",
+            json = task_data,
             headers = headers
             )
 
