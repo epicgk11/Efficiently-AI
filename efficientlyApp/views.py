@@ -9,10 +9,10 @@ import json
 from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
 from django.contrib.auth.password_validation import validate_password
+from django.middleware.csrf import get_token
 
 base_url = f""
 
-# Account Views
 
 def login_view(request):
     error = None
@@ -117,9 +117,6 @@ def logoutView(request):
     logout(request)
     return redirect('login')
 
-
-
-# TASKS VIEWS
 def get_base_path(request):
     global base_url
     if base_url == "":
@@ -134,21 +131,27 @@ def getuserData(request):
                 "email":request.user.email,
                 "username":request.user.username}
 
+
 def createtask(request):
     get_base_path(request)
     if request.user.is_authenticated:
         if request.method == 'POST':
+            csrf_cookie = get_token(request)
+            print(csrf_cookie)
             headers = {
-                'userId':request.user.email
+                'userId': request.user.email,
             }
             json_data = parse(request)
-            res = requests.post(f"{base_url}/data/tasks/create/",headers = headers,json = json_data)
+            res = requests.post(f"{base_url}/data/tasks/create/", headers=headers, json=json_data)
             if res.status_code == 200:
                 return redirect('listtasks')
             else:
-                return JsonResponse({"message":"Error Occured"})
-        data = {'user_data':getuserData(request)}
-        return render(request, 'createTask.html',context=data)
+                return JsonResponse({
+                    "status_code": res.status_code,
+                    "message": "Error Occurred"
+                })
+        data = {'user_data': getuserData(request)}
+        return render(request, 'createTask.html', context=data)
     else:
         return redirect("login")
 
