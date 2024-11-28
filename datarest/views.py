@@ -8,8 +8,18 @@ from .mongoUtils import MongoDB
 from bson.objectid import ObjectId
 mongo = MongoDB()
 usersCollection = mongo.getCollection('users')
+def check_databaser_server(mongo_object):
+    try:
+        mongo_object.client.server_info()
+        return True,{"message":"Ok"}
+    except Exception as e:
+        return False,Response({"message":"Database temporarly down"},status=status.HTTP_404_NOT_FOUND)
 
-def check_user(request,user_id):
+database_availibility_flag,database_response = check_databaser_server(mongo)
+
+def check_user(request,user_id):    
+    if not database_availibility_flag:
+        return database_response
     if not user_id:
         return False,Response({"message":"userId not found"},status = status.HTTP_400_BAD_REQUEST)
     existing_user = usersCollection.find_one({'userId': user_id})
@@ -19,6 +29,8 @@ def check_user(request,user_id):
 
 class UserRegistrationView(APIView):
     def post(self,request):
+        if not database_availibility_flag:
+                return database_response
         user_id = request.headers.get('userId')
         existing_user = usersCollection.find_one({'userId': user_id})
         if existing_user:
@@ -34,6 +46,8 @@ class UserRegistrationView(APIView):
 
 class AdditionalInfoAddingGettingView(APIView):
     def post(self,request):
+        if not database_availibility_flag:
+                return database_response
         userId = request.headers.get('userId')
         flag,existing_user = check_user(request,userId)
         if not flag:
@@ -46,6 +60,8 @@ class AdditionalInfoAddingGettingView(APIView):
         return Response({'matched': result.matched_count, 'modified': result.modified_count},status=status.HTTP_200_OK)
     
     def get(self,request):
+        if not database_availibility_flag:
+                return database_response
         userId = request.headers.get('userId')
         flag,existing_user = check_user(request,userId)
         if not flag:
@@ -58,6 +74,8 @@ class AdditionalInfoAddingGettingView(APIView):
 
 class TaskAddView(APIView):
     def post(self,request):
+        if not database_availibility_flag:
+                return database_response
         userId = request.headers.get('userId')
         flag,existing_user = check_user(request,userId)
         if not flag:
@@ -70,6 +88,8 @@ class TaskAddView(APIView):
 class GetUpdateDelete(APIView):
 
     def put(self,request,taskId):
+        if not database_availibility_flag:
+                return database_response
         userId = request.headers.get('userId')
         flag,existing_user = check_user(request,userId)
         if not flag:
@@ -84,6 +104,8 @@ class GetUpdateDelete(APIView):
         return Response({'matched': result.matched_count, 'modified': result.modified_count},status = status.HTTP_200_OK)
 
     def get(self,request,taskId):
+        if not database_availibility_flag:
+                return database_response
         userId = request.headers.get('userId')
         flag,existing_user = check_user(request,userId)
         if not flag:
@@ -94,6 +116,8 @@ class GetUpdateDelete(APIView):
         return Response({"message":"Task Not Found"},status = status.HTTP_400_BAD_REQUEST)
     
     def delete(self,request,taskId):
+        if not database_availibility_flag:
+                return database_response
         userId = request.headers.get('userId')
         flag,existing_user = check_user(request,userId)
         if not flag:
@@ -104,6 +128,8 @@ class GetUpdateDelete(APIView):
 
 class ListTasksView(APIView):
     def get(self,request):
+        if not database_availibility_flag:
+                return database_response
         userId = request.headers.get('userId')
         flag,existing_user = check_user(request,userId)
         if not flag:

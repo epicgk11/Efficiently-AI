@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Error - Efficiently AI{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'app/css/error.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="error-container">
+    <!-- Error Header -->
+    <div class="error-header">
+        <h1 class="error-title">Uh oh, an error occurred</h1>
+        <img src="{% static 'app/error/error.png' %}" alt="Error Logo" class="error-logo">
+    </div>
+
+    <!-- Error Details -->
+    <div class="error-details">
+        <h2 class="error-status">Error {{ error.status }}</h2>
+        <p class="error-message">{{ error.message }}</p>
+    </div>
+
+    <!-- Back Button -->
+    <div class="error-action">
+        <a href="{% url 'listtasks' %}" class="error-back-button">Go Back to Home</a>
+    </div>
+</div>
+{% endblock %}

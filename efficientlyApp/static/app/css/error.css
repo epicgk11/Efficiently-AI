@@ -1,0 +1,124 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+    font-family: 'JetBrains Mono', monospace;
+    background-color: #f3f4f6; /* Light background for the error page */
+    color: #1f2937; /* Dark text for better readability */
+}
+
+/* Error Container */
+.error-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 80vh;
+    text-align: center;
+    padding: 2rem;
+    animation: fadeIn 1s ease-in-out;
+}
+
+/* Error Header */
+.error-header {
+    margin-bottom: 2rem;
+}
+
+.error-title {
+    font-size: 3rem;
+    font-weight: bold;
+    color: #e44d26;
+    margin-bottom: 1rem;
+    animation: slideDown 0.8s ease-in-out;
+}
+
+.error-logo {
+    width: 120px;
+    height: 120px;
+    object-fit: contain;
+    margin: 0 auto;
+    animation: bounce 1.5s infinite ease-in-out;
+}
+
+/* Error Details */
+.error-details {
+    background-color: white;
+    border: 2px solid #e44d26;
+    border-radius: 15px;
+    padding: 2rem;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+    margin-bottom: 2rem;
+    width: 90%;
+    max-width: 600px;
+    transition: transform 0.3s ease-in-out;
+}
+
+.error-details:hover {
+    transform: translateY(-5px);
+}
+
+.error-status {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #e44d26;
+}
+
+.error-message {
+    font-size: 1.2rem;
+    color: #6b7280;
+    margin-top: 0.5rem;
+}
+
+/* Back Button */
+.error-action {
+    margin-top: 1.5rem;
+}
+
+.error-back-button {
+    background: linear-gradient(135deg, #10c875, #0eae68);
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: bold;
+    text-decoration: none;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+}
+
+.error-back-button:hover {
+    background: linear-gradient(135deg, #0eae68, #10c875);
+    transform: scale(1.05);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideDown {
+    from {
+        transform: translateY(-30px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes bounce {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}

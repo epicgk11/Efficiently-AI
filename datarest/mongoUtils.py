@@ -5,7 +5,8 @@ class MongoDB:
     def __init__(self):
         self.client = MongoClient(
             host=settings.MONGO_DB['HOST'],
-            port=settings.MONGO_DB['PORT']
+            port=settings.MONGO_DB['PORT'],
+            serverSelectionTimeoutMS=2000,
         )
         self.db = self.client[settings.MONGO_DB['NAME']]
 

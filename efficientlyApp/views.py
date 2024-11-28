@@ -92,24 +92,30 @@ def profile_view(request):
             }
 
             headers = {'userId': request.user.email}
-            requests.post(f"{base_url}/data/v2/additionalInfo/", json=data, headers=headers)
-            return redirect("listtasks")
+            res = requests.post(f"{base_url}/data/v2/additionalInfo/", json=data, headers=headers)
+            if res.status_code==200:
+                return redirect("listtasks")
+            else:
+                return errorView(request,res)
 
         headers = {"userId": request.user.email}
         response = requests.get(f"{base_url}/data/v2/additionalInfo/", headers=headers)
         additional_info = response.json()
-        profile_image = request.user.profile_pic.url if request.user.profile_pic else "https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/Avatar_icon_green.svg/2048px-Avatar_icon_green.svg.png"
+        if response.status_code==200:
+            profile_image = request.user.profile_pic.url if request.user.profile_pic else "https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/Avatar_icon_green.svg/2048px-Avatar_icon_green.svg.png"
+        
 
+            user_data = {
+                "username": request.user.username,
+                "email": request.user.email,
+                "bio": additional_info.get("bio", ""),
+                "profile_image": profile_image,
+                "commitments": additional_info.get("commitments", []),
+            }
 
-        user_data = {
-            "username": request.user.username,
-            "email": request.user.email,
-            "bio": additional_info.get("bio", ""),
-            "profile_image": profile_image,
-            "commitments": additional_info.get("commitments", []),
-        }
-
-        return render(request, 'profile.html', {"user_data": user_data})
+            return render(request, 'profile.html', {"user_data": user_data})
+        else:
+            return errorView(request,response)
     return redirect('login')
 
 def logoutView(request):
@@ -134,8 +140,6 @@ def createtask(request):
     get_base_path(request)
     if request.user.is_authenticated:
         if request.method == 'POST':
-            csrf_cookie = get_token(request)
-            print(csrf_cookie)
             headers = {
                 'userId': request.user.email,
             }
@@ -144,7 +148,7 @@ def createtask(request):
             if res.status_code == 200:
                 return redirect('listtasks')
             else:
-                return JsonResponse(res.json())
+                return errorView(request,res)
         data = {'user_data': getuserData(request)}
         return render(request, 'createTask.html', context=data)
     else:
@@ -158,14 +162,19 @@ def listtasks(request):
         }
         headers = {"userId": request.user.email}
         user_data = getuserData(request)
-        tasks = dict(requests.get(f"{base_url}/data/v2/tasks/list/",headers=headers).json())
-        data = {}
-        data['tasks'] = tasks['tasks']
-        for index,task in enumerate(data['tasks']):
-            task['id'] = task.pop('_id')
-            data["tasks"][index] = task
-        data['user_data'] = user_data
-        return render(request,'home.html',context = data)
+        res = requests.get(f"{base_url}/data/v2/tasks/list/",headers=headers)
+        
+        if res.status_code==200:
+            data = {}
+            tasks = res.json()
+            data['tasks'] = tasks['tasks']
+            for index,task in enumerate(data['tasks']):
+                task['id'] = task.pop('_id')
+                data["tasks"][index] = task
+            data['user_data'] = user_data
+            return render(request,'home.html',context = data)
+        else:
+            return errorView(request,res)
     else:
         return redirect('login')
 
@@ -177,7 +186,7 @@ def deletetask(request,taskId):
         if res.status_code == 200:
             return redirect('listtasks')
         else:
-            return JsonResponse(res.json())
+            return errorView(request,res)
     else:
         return redirect('login')
     
@@ -190,15 +199,25 @@ def updatetask(request,taskId):
         if request.method == "POST":
             get_base_path(request)
             dictData = parse(request)
-            requests.put(f"{base_url}/data/v2/tasks/{taskId}/",
+            res = requests.put(f"{base_url}/data/v2/tasks/{taskId}/",
                           json = dictData,
                           headers=headers)
-            return redirect('listtasks')
+            if res.status_code==200:
+                return redirect('listtasks')
+            else:
+                return errorView(request,res.json())
         res = requests.get(f"{base_url}/data/v2/tasks/{taskId}",headers = headers)
-        context = {'task':res.json()['task'],'user_data':getuserData(request)}
-        return render(request,'taskView.html',context=context)
+        if res.status_code==200:        
+            context = {'task':res.json()['task'],'user_data':getuserData(request)}
+            return render(request,'taskView.html',context=context)
+        else:
+            return errorView(request,res)
     else:
         return redirect("login")
 
-
+def errorView(request,response):
+    data = getuserData(request)
+    error = response.json()
+    error['status'] = response.status_code
+    return render(request,"error.html",{"user_data":data,"error":error})
 
