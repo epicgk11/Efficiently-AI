@@ -39,6 +39,7 @@ body {
     height: 0;
 }
 
+/* Checkbox Icon Styles */
 .checkbox-icon {
     display: flex;
     align-items: center;
@@ -59,29 +60,22 @@ body {
     color: #10c875;
 }
 
-.custom-checkbox input:checked + .checkbox-icon {
+/* On Hover (instead of on check) */
+.custom-checkbox:hover .checkbox-icon {
     background-color: #10c875;
     transform: scale(1.1);
 }
 
-.custom-checkbox input:checked + .checkbox-icon::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+.custom-checkbox:hover .checkbox-icon svg {
+    color: white;
+}
+
+/* Optional: If you want the hover effect only when input is focused */
+.custom-checkbox input:focus + .checkbox-icon {
     background-color: #10c875;
-    border-radius: 50%;
-    z-index: -1;
-    transform: scale(0);
-    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transform: scale(1.1);
 }
 
-.custom-checkbox input:checked + .checkbox-icon::before {
-    transform: scale(1);
-}
-
-.custom-checkbox input:checked + .checkbox-icon svg {
+.custom-checkbox input:focus + .checkbox-icon svg {
     color: white;
 }

@@ -114,9 +114,10 @@ body {
     text-decoration: line-through;
     color: #888;
 }
-.steps-container .step.completed input[type="text"]{
-    min-height: 1rem;
-}
+/* .steps-container .step.completed input[type="text"]{
+    min-height: 0rem;
+    max-height: 0rem;
+} */
 .steps-container .custom-checkbox {
     display: flex;
     align-items: center;
@@ -172,8 +173,8 @@ body {
 
 .sortable-ghost {
     opacity: 0;
-    background-color: #f3f4f6; /* Light gray background during drag */
-    border: 2px dashed #10c875; /* Dashed border to show drag effect */
+    background-color: #f3f4f6; 
+    border: 2px dashed #10c875;
 }
 
 .sortable-chosen {

@@ -56,10 +56,7 @@
     {% endfor %}
 </div>
 
-
-
-<!-- Script  Section -->
-
+<!-- Script Section -->
 <script>
     document.addEventListener('DOMContentLoaded', () => {
     const searchInput = document.getElementById("task-search");
@@ -96,6 +93,5 @@
     searchInput.addEventListener('input', filterTasks);
     tagFilter.addEventListener('change', filterTasks);
 });
-
 </script>
 {% endblock %}

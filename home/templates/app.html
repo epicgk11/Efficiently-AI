@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Efficiently AI - Elevate Your Productivity</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'home/css/styles.css' %}">
+</head>
+<body class="bg-gray-50 text-gray-900">
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 bg-white shadow-md py-4">
+        <div class="container mx-auto flex justify-between items-center px-6">
+            <a href="#" class="text-2xl font-bold gradient-text">Efficiently AI</a>
+            <div class="flex items-center space-x-6">
+                <a href="#features" class="text-gray-700 hover:text-green-600 transition">Features</a>
+                <a href="#ai-capabilities" class="text-gray-700 hover:text-green-600 transition">AI Capabilities</a>
+                <button id="contact-trigger" class="bg-green-600 text-white px-4 py-2 rounded-full hover:bg-green-700 transition">Contact Us</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section min-h-screen flex items-center bg-gradient-to-br from-green-500 to-green-700 text-white relative overflow-hidden">
+        <!-- Background Effects -->
+        <div class="hero-overlay"></div>
+        <div class="hero-pattern"></div>
+    
+        <!-- Main Content -->
+        <div class="container mx-auto px-6 text-center hero-content relative z-10">
+            <div class="max-w-4xl mx-auto p-8 bg-white text-green-600 rounded-lg shadow-2xl transform hover:scale-105 transition duration-500">
+                <h1 class="text-5xl md:text-6xl font-extrabold mb-6 leading-tight">
+                    <span class="gradient-text">Efficiently AI</span>: Revolutionizing Productivity
+                </h1>
+                <p class="text-lg md:text-xl text-gray-700 max-w-3xl mx-auto mb-8 leading-relaxed">
+                    Discover a new way to work smarter with AI-powered task management. From creating actionable steps to planning your week, we redefine productivity with cutting-edge technology.
+                </p>
+                <div class="space-x-4">
+                    <a href="{% url 'appregistration' %}" class="inline-block bg-green-600 text-white px-8 py-3 rounded-full font-bold hover:bg-green-700 transition shadow-lg hover:shadow-xl">
+                        Get Started Now
+                    </a>
+                    <a href="#features" class="inline-block border border-green-600 text-green-600 px-8 py-3 rounded-full hover:bg-green-600 hover:text-white transition">
+                        Learn More
+                    </a>
+                </div>
+            </div>
+        </div>
+    
+        <!-- Floating Decorative Elements -->
+        <div class="absolute top-10 left-10 w-24 h-24 bg-white bg-opacity-20 rounded-full filter blur-xl animate-float"></div>
+        <div class="absolute bottom-10 right-10 w-32 h-32 bg-white bg-opacity-20 rounded-full filter blur-2xl animate-float delay-2"></div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="py-20 bg-gray-100">
+        <div class="container mx-auto px-6">
+            <h2 class="text-4xl font-bold text-center text-green-600 mb-12">Core Features</h2>
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-12">
+                <!-- Feature 1 -->
+                <div class="feature-card bg-white p-6 rounded-lg shadow-md transform feature-hover">
+                    <img src="path/to/task_management.jpg" alt="Task Management" class="w-full h-48 object-cover rounded-t-lg mb-4">
+                    <h3 class="text-2xl font-bold text-green-600 mb-2">Comprehensive Task Management</h3>
+                    <p class="text-gray-700">Effortlessly organize your tasks, track progress, and stay focused on your goals with an intuitive and clean interface.</p>
+                </div>
+                <!-- Feature 2 -->
+                <div class="feature-card bg-white p-6 rounded-lg shadow-md transform feature-hover">
+                    <img src="path/to/ai_task_planning.jpg" alt="AI Task Planning" class="w-full h-48 object-cover rounded-t-lg mb-4">
+                    <h3 class="text-2xl font-bold text-green-600 mb-2">AI-Driven Task Breakdown</h3>
+                    <p class="text-gray-700">Input a task, and let our AI break it down into actionable steps with due dates, resources, and tags to maximize productivity.</p>
+                </div>
+                <!-- Feature 3 -->
+                <div class="feature-card bg-white p-6 rounded-lg shadow-md transform feature-hover">
+                    <img src="path/to/weekly_planner.jpg" alt="Weekly Planner" class="w-full h-48 object-cover rounded-t-lg mb-4">
+                    <h3 class="text-2xl font-bold text-green-600 mb-2">Personalized Weekly Planner</h3>
+                    <p class="text-gray-700">Plan your week effectively with our AI-powered scheduler to achieve your goals while maintaining a balanced workflow.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- AI Capabilities -->
+    <section id="ai-capabilities" class="py-20 bg-white">
+        <div class="container mx-auto px-6">
+            <h2 class="text-4xl font-bold text-center text-green-600 mb-12">AI Capabilities</h2>
+            <div class="grid md:grid-cols-2 gap-12 items-center">
+                <div class="ai-feature-text">
+                    <h3 class="text-3xl font-bold text-green-600 mb-4">Smart Task Decomposition</h3>
+                    <p class="text-gray-700 mb-6">Describe your task and our AI will break it into actionable steps, assign due dates, suggest resources, and organize them for you.</p>
+                    <h3 class="text-3xl font-bold text-green-600 mb-4">Personalized Weekly Scheduling</h3>
+                    <p class="text-gray-700">Get a personalized weekly schedule tailored to your tasks and deadlines, ensuring maximum productivity.</p>
+                </div>
+                <div class="ai-feature-image">
+                    <img src="path/to/ai_features.jpg" alt="AI Features" class="w-full h-auto rounded-lg shadow-md">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-gray-400 py-6">
+        <div class="container mx-auto px-6 text-center">
+            <p>&copy; 2024 Efficiently AI. All rights reserved.</p>
+            <p>Designed with ❤️ for a more productive tomorrow.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+    // Smooth Scrolling for Navigation Links
+    const navLinks = document.querySelectorAll('nav a[href^="#"]');
+    navLinks.forEach(link => {
+        link.addEventListener('click', function (e) {
+            e.preventDefault();
+            const targetId = this.getAttribute('href').substring(1);
+            const targetElement = document.getElementById(targetId);
+            if (targetElement) {
+                window.scrollTo({
+                    top: targetElement.offsetTop - 60, // Adjust for fixed navbar height
+                    behavior: 'smooth',
+                });
+            }
+        });
+    });
+
+    // Scroll Animation on Section Visibility
+    const observerOptions = {
+        threshold: 0.2, // Trigger animation when 20% of the element is visible
+    };
+
+    const observerCallback = (entries, observer) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('animate-fade-in');
+                observer.unobserve(entry.target); // Stop observing once animation is triggered
+            }
+        });
+    };
+
+    const observer = new IntersectionObserver(observerCallback, observerOptions);
+    const sections = document.querySelectorAll('.feature-card, .ai-feature-text, .ai-feature-image, .hero-content');
+    sections.forEach(section => observer.observe(section));
+
+    // Contact Modal (Optional)
+    const contactTrigger = document.getElementById('contact-trigger');
+    const contactModal = document.createElement('div');
+    contactModal.classList.add('contact-modal', 'fixed', 'top-0', 'left-0', 'w-full', 'h-full', 'bg-green-900', 'bg-opacity-90', 'flex', 'justify-center', 'items-center', 'z-50');
+    contactModal.style.display = 'none';
+    contactModal.innerHTML = `
+        <div class="bg-white p-6 rounded-lg shadow-lg text-center">
+            <h2 class="text-2xl font-bold text-green-600 mb-4">Contact Us</h2>
+            <p class="text-gray-700 mb-6">We would love to hear from you! Reach out for any inquiries or feedback.</p>
+            <button id="close-contact" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition">Close</button>
+        </div>
+    `;
+    document.body.appendChild(contactModal);
+
+    contactTrigger.addEventListener('click', () => {
+        contactModal.style.display = 'flex';
+    });
+
+    contactModal.addEventListener('click', (e) => {
+        if (e.target.id === 'close-contact' || e.target === contactModal) {
+            contactModal.style.display = 'none';
+        }
+    });
+});
+    </script>
+</body>
+</html>
