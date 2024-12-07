@@ -4,7 +4,7 @@
     {% load static %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'app/css/base.css' %}">
     <link rel="icon" href="{% static 'app/logo/logo.png' %}" type="image/icon type">
@@ -13,7 +13,7 @@
 </head>
 <body class="bg-gray-50 text-black min-h-screen">
     <!-- Navbar -->
-    <nav class="bg-gradient-to-r from-green-400 via-green-500 to-green-600 shadow-lg">
+    <nav class="bg-[#10c875] shadow-lg">
         <div class="container mx-auto flex justify-between items-center px-4 py-4">
             <!-- Logo -->
             <a href="{% url 'listtasks' %}" class="flex items-center gap-2">
@@ -71,28 +71,6 @@
         </div>
     </nav>
     {% block content %}{% endblock %}
-
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const menu = document.getElementById('menu');
-            const menuBtn = document.getElementById('menu-btn');
-            menuBtn.addEventListener('click', () => {
-                menu.classList.toggle('hidden');
-            });
-
-            const profileDropdown = document.getElementById('profile-dropdown');
-            const profileBtn = document.getElementById('profile-dropdown-btn');
-            profileBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                profileDropdown.classList.toggle('hidden');
-            });
-
-            document.addEventListener('click', (e) => {
-                if (!profileDropdown.contains(e.target) && !profileBtn.contains(e.target)) {
-                    profileDropdown.classList.add('hidden');
-                }
-            });
-        });
-    </script>
 </body>
+<script src="{% static 'app/js/base.js' %}"></script>
 </html>

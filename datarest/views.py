@@ -17,7 +17,7 @@ def check_databaser_server(mongo_object):
 
 database_availibility_flag,database_response = check_databaser_server(mongo)
 
-def check_user(request,user_id):    
+def check_user(user_id):    
     if not database_availibility_flag:
         return database_response
     if not user_id:
@@ -39,7 +39,8 @@ class UserRegistrationView(APIView):
             "userId":user_id,
             "tasks":[],
             "bio":None,
-            "commitments":[]
+            "commitments":[],
+            "apiKey":None
         }
         insert_id = usersCollection.insert_one(user_data).inserted_id
         return Response({"message":"Successful","id":str(insert_id)},status = status.HTTP_201_CREATED)
@@ -49,7 +50,7 @@ class AdditionalInfoAddingGettingView(APIView):
         if not database_availibility_flag:
                 return database_response
         userId = request.headers.get('userId')
-        flag,existing_user = check_user(request,userId)
+        flag,existing_user = check_user(userId)
         if not flag:
             return existing_user
         update_fields = json.loads(request.body)
@@ -63,7 +64,7 @@ class AdditionalInfoAddingGettingView(APIView):
         if not database_availibility_flag:
                 return database_response
         userId = request.headers.get('userId')
-        flag,existing_user = check_user(request,userId)
+        flag,existing_user = check_user(userId)
         if not flag:
             return existing_user
         return_data = {
@@ -77,7 +78,7 @@ class TaskAddView(APIView):
         if not database_availibility_flag:
                 return database_response
         userId = request.headers.get('userId')
-        flag,existing_user = check_user(request,userId)
+        flag,existing_user = check_user(userId)
         if not flag:
             return existing_user
         task = json.loads(request.body)
@@ -91,7 +92,7 @@ class GetUpdateDelete(APIView):
         if not database_availibility_flag:
                 return database_response
         userId = request.headers.get('userId')
-        flag,existing_user = check_user(request,userId)
+        flag,existing_user = check_user(userId)
         if not flag:
             return existing_user
         tasks = existing_user.get('tasks', [])
@@ -107,7 +108,7 @@ class GetUpdateDelete(APIView):
         if not database_availibility_flag:
                 return database_response
         userId = request.headers.get('userId')
-        flag,existing_user = check_user(request,userId)
+        flag,existing_user = check_user(userId)
         if not flag:
             return existing_user
         for task in existing_user['tasks']:
@@ -119,7 +120,7 @@ class GetUpdateDelete(APIView):
         if not database_availibility_flag:
                 return database_response
         userId = request.headers.get('userId')
-        flag,existing_user = check_user(request,userId)
+        flag,existing_user = check_user(userId)
         if not flag:
             return existing_user
         tasks = [task for task in existing_user['tasks'] if task['_id'] != taskId]
@@ -131,7 +132,34 @@ class ListTasksView(APIView):
         if not database_availibility_flag:
                 return database_response
         userId = request.headers.get('userId')
-        flag,existing_user = check_user(request,userId)
+        flag,existing_user = check_user(userId)
         if not flag:
             return existing_user
         return Response({"tasks":existing_user.get('tasks', [])},status = status.HTTP_200_OK)
+    
+
+class APIKeyGetView(APIView):
+     def get(self,request):
+          if not database_availibility_flag:
+               return database_response
+          print("Reached Here !!")
+          userId = request.headers.get('userId')
+          flag,existing_user = check_user(userId)
+          if not flag:
+               return existing_user
+          key = existing_user.get('apiKey')
+          if not key:
+               return Response({"message":"API key not set please set the same"},status=status.HTTP_400_BAD_REQUEST)
+          return Response({'key':key},status=status.HTTP_200_OK)
+     def post(self,request):
+        userId = request.headers.get('userId')
+        print(userId)
+        flag,existing_user = check_user(userId)
+        if not flag:
+            return existing_user
+        api_key = json.loads(request.body)['api_key']
+        result = usersCollection.update_one(
+            {'userId': userId},
+            {'$set': {'apiKey':api_key}}
+        )
+        return Response({'matched': result.matched_count, 'modified': result.modified_count},status=status.HTTP_200_OK)

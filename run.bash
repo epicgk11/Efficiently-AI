@@ -1,5 +1,5 @@
 sudo systemctl start mongod
-source ../.Effenv/bin/activate
+source ../.linuxenv/bin/activate
 python manage.py runserver
 deactivate
 sudo systemctl stop mongod

@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Setup API Key | Efficiently AI{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'app/css/api_key.css' %}">
+{% endblock %}
+{% block content %}
+<div class="flex justify-center items-center min-h-[80vh]">
+    <div class="bg-white shadow-lg rounded-lg p-12 max-w-[33%] ">
+        <h1 class="text-4xl font-bold text-center text-[#064431] mb-8">Setup Groq API Key</h1>
+        
+        <!-- Instructional Message -->
+        <p class="text-lg text-gray-700 mb-6 text-center">
+            Enter your <strong>Groq API Key</strong> below. 
+            Don't have one? 
+            <a href="https://console.groq.com/keys" target="_blank" class="text-[#10c875] font-bold hover:underline">
+                Click here to get your API Key
+            </a>.
+        </p>
+        
+        <form method="POST" action="{% url 'setup api' %}">
+            {% csrf_token %}
+            
+            <!-- Current API Key Display -->
+            {% if api_key %}
+            <div class="mb-6">
+                <label class="block text-gray-700 font-medium mb-3 text-lg">Current API Key</label>
+                <div class="bg-gray-100 text-gray-700 px-4 py-3 rounded-lg text-lg break-all">
+                    {{ api_key }}
+                </div>
+            </div>
+            {% endif %}
+            
+            <!-- New API Key Input -->
+            <div class="mb-8">
+                <label for="newApiKey" class="block text-gray-700 font-medium mb-3 text-lg">New API Key</label>
+                <input type="password" id="newApiKey" name="newApiKey" 
+                       class="w-full px-4 py-3 border rounded-lg text-lg focus:outline-none focus:ring-2 focus:ring-[#10c875] focus:border-transparent" 
+                       placeholder="Enter your Groq API Key" >
+            </div>
+            
+            <!-- Submit Button -->
+            <button type="submit" 
+                    class="w-full bg-[#10c875] text-white font-bold py-3 rounded-lg hover:bg-[#064431] transition duration-300 text-lg">
+                Update API Key
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}

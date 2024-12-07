@@ -3,7 +3,7 @@
 <head>
     {% load static %}
     <title>Login | Efficiently</title>
-    <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="/static/css/login.css">
     <link rel="icon" href="{% static 'app/logo/logo.png' %}" type="image/icon type">
     <script>
@@ -67,8 +67,44 @@
         });
     </script>
     <link rel="stylesheet" href="{% static 'app/css/login.css' %}">
+    <style>
+        
+    </style>
 </head>
-<body class="bg-green-600 flex items-center justify-center min-h-screen">
+<body class="flex items-center justify-center min-h-screen">
+    <header>
+        <nav class="fixed top-0 w-full z-50 bg-white shadow-md py-4">
+            <div class="container mx-auto flex justify-between items-center px-6">
+                <!-- Logo -->
+                <div class="flex items-center space-x-3">
+                    <div class="flex items-center justify-center bg-white rounded-full h-10 w-10 border-4 border-[#10c875] shadow-lg">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-[#10c875]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                        </svg>
+                    </div>
+                    <a href="{% url 'home' %}" class="text-2xl font-bold text-[#064431]">Efficiently AI</a>
+                </div>
+                <!-- Navigation Links -->
+                <div class="flex items-center space-x-6">
+                    <a href="#features" class="text-gray-700 hover:text-[#10c875] transition">Features</a>
+                    
+                    <!-- Social Media Links -->
+                    <div class="flex space-x-4">
+                        <a href="https://twitter.com" target="_blank" class="hover:opacity-80 transition">
+                            <img src="{% static 'home/images/twitter.jpg' %}" alt="Twitter" class="h-8">
+                        </a>
+                        <a href="https://linkedin.com" target="_blank" class="hover:opacity-80 transition">
+                            <img src="{% static 'home/images/linkedin.png' %}" alt="LinkedIn" class="h-8">
+                        </a>
+                        <a href="https://github.com" target="_blank" class="hover:opacity-80 transition">
+                            <img src="{% static 'home/images/github.png' %}" alt="GitHub" class="h-8">
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+    
     <div class="form-container">
         <h1>Welcome Back!</h1>
         <p>Log in to manage your tasks efficiently.</p>

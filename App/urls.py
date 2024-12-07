@@ -24,6 +24,7 @@ urlpatterns = [
     path('data/v1/',include('data.urls')),
     path('app/',include('efficientlyApp.urls')),
     path('data/v2/',include('datarest.urls')),
+    path('ai/',include('efficientlyAI.urls')),
 ]
 
 if settings.DEBUG:

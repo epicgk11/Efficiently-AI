@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'efficientlyApp',
     'rest_framework',
     'datarest',
+    'efficientlyAI',
 ]
 
 MIDDLEWARE = [

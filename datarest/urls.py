@@ -6,4 +6,5 @@ urlpatterns = [
     path('tasks/create/',TaskAddView.as_view(),name='v2 createTask'),
     path('tasks/list/',ListTasksView.as_view(),name='v2 listTasks'),
     path('tasks/<str:taskId>/',GetUpdateDelete.as_view(),name='v2 getupdatedelete'),
+    path('getapi/',APIKeyGetView.as_view(),name = 'api key view')
 ]

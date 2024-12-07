@@ -3,7 +3,6 @@
 {% block title %}Edit Profile{% endblock %}
 
 {% block extra_css %}
-<link href="https://unpkg.com/tailwindcss@^2.0/dist/tailwind.min.css" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="{% static 'app/css/profile.css' %}">
 {% endblock %}
@@ -54,15 +53,41 @@
                 {% endfor %}
             </div>
             <button type="button" id="add-commitment" 
-                    class="mt-4 bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg font-bold">
+                    class="mt-4 bg-[#10c875] hover:bg-green-700 text-white px-6 py-2 rounded-lg font-bold">
                 + Add Commitment
             </button>
+        </div>
+        <div class="field-container">
+            {% if user_data.apiKey %}
+            <div class="mb-6">
+                <label class="block text-gray-700 font-medium mb-3 text-lg">Current Groq API Key</label>
+                <!-- <div class="bg-gray-100 text-gray-700 px-4 py-3 rounded-lg text-lg break-all"> -->
+                <div class="bg-gray-100 text-gray-700 px-4 py-2 mb-6 text-lg break-all">
+                    {{ user_data.apiKey }}
+                </div>
+                <a id="add-commitment" href="{% url 'setup api' %}"
+                class="mt-4 bg-[#10c875] hover:bg-green-700 text-white px-6 py-2 rounded-lg font-bold">
+                    Edit API key        
+                </a>
+            </div>
+
+            {% else %}
+
+            <div class="mb-6">
+                <label class="block text-gray-700 font-medium mb-3 text-lg">Setup a Groq API to access AI features</label>
+            <a id="add-commitment" href="{% url 'setup api' %}"
+                        class="mt-4 bg-[#10c875] hover:bg-green-700 text-white px-6 py-2 rounded-lg font-bold">
+                    Setup API key        
+            </a>
+            </div>
+
+        {% endif %}
         </div>
 
         <!-- Submit Button -->
         <div class="text-center mt-8">
             <button type="submit" 
-                    class="bg-green-600 hover:bg-green-700 text-white px-10 py-3 rounded-lg shadow-lg font-bold text-xl transition transform hover:scale-105">
+                    class="bg-[#10c875] hover:bg-green-700 text-white px-10 py-3 rounded-lg shadow-lg font-bold text-xl transition transform hover:scale-105">
                 Save Profile
             </button>
         </div>

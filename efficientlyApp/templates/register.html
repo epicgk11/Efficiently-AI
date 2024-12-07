@@ -3,161 +3,47 @@
 <head>
     {% load static %}
     <title>Register | Efficiently</title>
-    <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="{% static 'app/css/register.css' %}">
     <link rel="icon" href="{% static 'app/logo/logo.png' %}" type="image/icon type">
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            const tasks = [
-                "Start your journey",
-                "Use Efficiently for efficiency",
-                "Achieve your dreams"
-            ];
-            const taskContainer = document.getElementById("task-animation");
-            let index = 0;
-
-            function typeAndDeleteTask(task, container, callback) {
-                let charIndex = 0;
-                let isTyping = true;
-
-                function type() {
-                    if (charIndex < task.length) {
-                        container.textContent += task[charIndex];
-                        charIndex++;
-                        setTimeout(type, 100); // Typing speed
-                    } else {
-                        isTyping = false;
-                        setTimeout(deleteText, 1000); // Delay before deleting
-                    }
-                }
-
-                function deleteText() {
-                    if (charIndex > 0) {
-                        container.textContent = task.substring(0, charIndex - 1);
-                        charIndex--;
-                        setTimeout(deleteText, 50); // Backspacing speed
-                    } else {
-                        isTyping = true;
-                        callback();
-                    }
-                }
-
-                if (isTyping) {
-                    type();
-                }
-            }
-
-            function displayTasks() {
-                if (index >= tasks.length) {
-                    index = 0; // Reset for looping
-                }
-
-                const taskElement = document.createElement("div");
-                taskElement.className = "task";
-                taskContainer.innerHTML = ""; // Clear previous task
-                taskContainer.appendChild(taskElement);
-
-                typeAndDeleteTask(tasks[index], taskElement, () => {
-                    index++;
-                    setTimeout(displayTasks, 500); // Delay before next task
-                });
-            }
-
-            displayTasks();
-        });
-    </script>
-    <style>
-        body {
-            font-family: 'JetBrains Mono', monospace;
-        }
-
-        .task {
-            font-size: 1.5rem;
-            font-weight: bold;
-            text-align: center;
-            animation: fadeIn 0.5s ease-in-out;
-            color: #064e3b; /* Primary green */
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(-10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .form-container {
-            background: white;
-            padding: 3rem;
-            border-radius: 1rem;
-            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-            max-width: 700px; /* Increased width */
-            width: 100%;
-            margin: 2rem auto;
-        }
-
-        h1 {
-            font-size: 2.5rem;
-            font-weight: bold;
-            color: #064e3b;
-            text-align: center;
-            margin-bottom: 1.5rem;
-        }
-
-        p {
-            text-align: center;
-            color: #6b7280;
-            margin-bottom: 2rem;
-        }
-
-        .form-container input {
-            width: 100%;
-            padding: 0.75rem 1rem;
-            margin: 1rem 0;
-            border: 2px solid #e5e7eb;
-            border-radius: 0.375rem;
-            font-size: 1.125rem;
-            transition: border-color 0.2s;
-        }
-
-        .form-container input:focus {
-            border-color: #10b981;
-            outline: none;
-        }
-
-        .form-container button {
-            background: #10b981;
-            color: white;
-            padding: 1rem;
-            width: 100%;
-            border-radius: 0.375rem;
-            font-size: 1.125rem;
-            font-weight: bold;
-            transition: background-color 0.3s;
-        }
-
-        .form-container button:hover {
-            background: #059669;
-        }
-
-        #task-animation {
-            min-height: 40px;
-            margin-bottom: 2rem;
-        }
-
-        .form-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 1rem;
-        }
-    </style>
+    <script src="{% static 'app/js/register.js' %}"></script>
 </head>
-<body class="bg-green-600 flex items-center justify-center min-h-screen">
-    <div class="form-container">
+<body class="min-h-screen">
+
+    <header>
+        <nav class="top-0 w-full z-50 bg-white shadow-md py-4">
+            <div class="container mx-auto flex justify-between items-center px-6">
+                <!-- Logo -->
+                <div class="flex items-center space-x-3">
+                    <div class="flex items-center justify-center bg-white rounded-full h-10 w-10 border-4 border-[#10c875] shadow-lg">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-[#10c875]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                        </svg>
+                    </div>
+                    <a href="{% url 'home' %}" class="text-2xl font-bold text-[#064431]">Efficiently AI</a>
+                </div>
+                <!-- Navigation Links -->
+                <div class="flex items-center space-x-6">
+                    <a href="#features" class="text-gray-700 hover:text-[#10c875] transition">Features</a>
+                    
+                    <!-- Social Media Links -->
+                    <div class="flex space-x-4">
+                        <a href="https://twitter.com" target="_blank" class="hover:opacity-80 transition">
+                            <img src="{% static 'home/images/twitter.jpg' %}" alt="Twitter" class="h-8">
+                        </a>
+                        <a href="https://linkedin.com" target="_blank" class="hover:opacity-80 transition">
+                            <img src="{% static 'home/images/linkedin.png' %}" alt="LinkedIn" class="h-8">
+                        </a>
+                        <a href="https://github.com" target="_blank" class="hover:opacity-80 transition">
+                            <img src="{% static 'home/images/github.png' %}" alt="GitHub" class="h-8">
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="form-container mt-12">
         <h1>Welcome to Efficiently!</h1>
         <p>Let’s get you started on the right path.</p>
         <div id="task-animation"></div>
@@ -196,7 +82,7 @@
             </div>
             <button type="submit">Register</button>
         </form>
-        <p class="text-center text-sm text-gray-600 mt-4">
+        <p class="text-center text-sm mt-4">
             Already have an account? 
             <a href="{% url 'login' %}" class="text-green-600 font-bold hover:underline">Log In</a>
         </p>

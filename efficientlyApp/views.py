@@ -100,6 +100,14 @@ def profile_view(request):
 
         headers = {"userId": request.user.email}
         response = requests.get(f"{base_url}/data/v2/additionalInfo/", headers=headers)
+        api_response = requests.get(f"{base_url}//data/v2/getapi/",headers = headers)
+        if api_response.status_code==200:
+            api_key = api_response.json()['key']
+        elif api_response.status_code==400 and api_response.json()['message'] =='API key not set please set the same': 
+            api_key = None
+        else:
+            return errorView(request,api_response)
+        print(api_key)
         additional_info = response.json()
         if response.status_code==200:
             profile_image = request.user.profile_pic.url if request.user.profile_pic else "https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/Avatar_icon_green.svg/2048px-Avatar_icon_green.svg.png"
@@ -111,6 +119,7 @@ def profile_view(request):
                 "bio": additional_info.get("bio", ""),
                 "profile_image": profile_image,
                 "commitments": additional_info.get("commitments", []),
+                "apiKey" : mask_api(api_key),
             }
 
             return render(request, 'profile.html', {"user_data": user_data})
@@ -221,3 +230,40 @@ def errorView(request,response):
     error['status'] = response.status_code
     return render(request,"error.html",{"user_data":data,"error":error})
 
+
+def mask_api(api_key):
+    if not api_key:
+        return api_key
+    if len(api_key) <= 8:
+        return '*' * len(api_key)
+    return f"{api_key[:2]}{'*' * (len(api_key) - 6)}{api_key[-4:]}"
+
+def setapi(request):
+    get_base_path(request)
+    if request.user.is_authenticated:
+        if request.method=="POST":
+            headers = {'userId':request.user.email}
+            response = requests.post(f"{base_url}/data/v2/getapi/",json = {'api_key':request.POST.get('newApiKey')},headers = headers)
+            if response.status_code==200:
+                return redirect('profileView')
+            else:
+                return errorView(request,response)
+        context = {}
+        user_data = getuserData(request)
+        context['user_data'] = user_data
+        headers = {
+            "userId":request.user.email
+        }
+        api_response = requests.get(f"{base_url}/data/v2/getapi/",headers = headers)
+        if api_response.status_code==200:
+            api_key = api_response.json()['key']
+        elif api_response.status_code==400 and api_response.json()['message'] =='API key not set please set the same': 
+            api_key = ""
+        else:
+            return errorView(request,api_response)
+        api_key = mask_api(api_key)
+        context['api_key'] = api_key
+        return render(request,'api_key.html',context=context)
+        
+    else:
+        return redirect('login')

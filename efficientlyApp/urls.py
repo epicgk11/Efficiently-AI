@@ -9,4 +9,5 @@ urlpatterns = [
     path('login',login_view,name='login'),
     path('logout/',logoutView,name='logout'),
     path('profile/',profile_view,name = "profileView"),
+    path('setapi/',setapi,name='setup api'),
 ]
