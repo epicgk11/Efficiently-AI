@@ -13,7 +13,7 @@ def get_prompt(request):
        - A short, actionable name describing the step.
        - A logical due date relative to the overall deadline.
        - A default completion status set to `false`. Make sure to striclty set the same
-   - **Resources**: Specify any tools, references, or materials required to complete the task and its individual steps. Ensure resources are clearly associated with relevant steps if possible.
+   - **Resources**: Specify any tools, references, or materials required to complete the task. For resources which helps to complete a step add it with the step name. Seperate the resources with newline charater 
 
 2. **Intelligent Suggestions**:
    - If the user does not provide a due date, logically estimate deadlines for each step. Today's date for reference : {curr_date}
@@ -28,7 +28,7 @@ def get_prompt(request):
     system_prompt += """json
    {
        "name": "Birthday Party Planning",
-       "duedate": "2024-12-19",
+       "due_date": "2024-12-19",
        "description": "Plan and organize a birthday party, including venue booking, sending invitations, arranging catering, and decorations.",
        "tags": [
            {"name": "event"},
@@ -36,10 +36,10 @@ def get_prompt(request):
            {"name": "priority"}
        ],
        "steps": [
-           {"name": "Book a venue", "duedate": "2024-12-10", "completed": false},
-           {"name": "Send invitations", "duedate": "2024-12-12", "completed": false},
-           {"name": "Organize catering", "duedate": "2024-12-15", "completed": false},
-           {"name": "Decorate the space", "duedate": "2024-12-19", "completed": false}
+           {"name": "Book a venue", "due_date": "2024-12-10", "completed": false},
+           {"name": "Send invitations \nYou can use this website to automate the same : automate.com", "due_date": "2024-12-12", "completed": false},
+           {"name": "Organize catering", "due_date": "2024-12-15", "completed": false},
+           {"name": "Decorate the space", "due_date": "2024-12-19", "completed": false}
        ],
        "resources": "1. Online invitation maker for invites. 2. Contact numbers for caterers. 3. List of decoration supplies."
    }""" 

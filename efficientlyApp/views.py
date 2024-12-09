@@ -218,6 +218,7 @@ def updatetask(request,taskId):
         res = requests.get(f"{base_url}/data/v2/tasks/{taskId}",headers = headers)
         if res.status_code==200:        
             context = {'task':res.json()['task'],'user_data':getuserData(request)}
+            print(res.json()['task']['due_date'],type(res.json()['task']['due_date']))
             return render(request,'taskView.html',context=context)
         else:
             return errorView(request,res)
@@ -227,9 +228,9 @@ def updatetask(request,taskId):
 def errorView(request,response):
     data = getuserData(request)
     error = response.json()
+    print(error)
     error['status'] = response.status_code
     return render(request,"error.html",{"user_data":data,"error":error})
-
 
 def mask_api(api_key):
     if not api_key:
@@ -267,3 +268,4 @@ def setapi(request):
         
     else:
         return redirect('login')
+

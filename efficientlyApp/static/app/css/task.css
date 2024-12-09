@@ -6,8 +6,9 @@ body {
     font-family: 'JetBrains Mono', monospace;
 }
 
+
+
 .form-fixed-layout {
-    height: auto;
     width: 50%;
     margin: 25px auto;
 }
@@ -19,7 +20,6 @@ body {
     color: #064431;
     background-color: transparent;
     border: none;
-    outline: none;
     padding: 0.5rem 0;
     resize: none;
     font-weight: bold;
@@ -27,9 +27,8 @@ body {
 }
 
 .input-like:focus {
-    outline: none;
     background-color: white;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    border-color: #10c875;
     border-radius: 0.25rem;
     padding: 0.75rem;
 }
@@ -75,7 +74,7 @@ body {
     width: 12px;
     height: 12px;
     background-color: #e44d26;
-    border: 2px solid white; /* To create a subtle border around the dot */
+    border: 2px solid white;
     border-radius: 50%;
     cursor: pointer;
     opacity: 0;
@@ -92,15 +91,19 @@ body {
     transform: scale(1.4);
 }
 
-
-/* Steps Styling */
-
 .steps-container .step {
     display: flex;
     gap: 1rem;
     align-items: center;
     margin-bottom: 15px;
-    transition: opacity 0.3s ease-in-out, transform 0.2s ease-in-out;
+    transition: all 0.3s ease-in-out;
+    padding: 1rem;
+    background-color: #f9f9f9;
+}
+
+.step:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 .steps-container .step.completed {
@@ -114,10 +117,7 @@ body {
     text-decoration: line-through;
     color: #888;
 }
-/* .steps-container .step.completed input[type="text"]{
-    min-height: 0rem;
-    max-height: 0rem;
-} */
+
 .steps-container .custom-checkbox {
     display: flex;
     align-items: center;

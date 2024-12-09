@@ -16,6 +16,7 @@ def parse(request):
     name = request.POST.get('name')
     description = request.POST.get('description')
     due_date = request.POST.get('due_date')
+    print(due_date,type(due_date))
     tags = request.POST.get('tags').split(",")
     if tags==['']:
         tags = []

@@ -23,10 +23,8 @@ def check_user(userId):
 class taskCreateView(APIView):
     def post(self,request):
         get_base_path(request)
-        print("Reached here !!!")
         userId = request.headers.get('userId')
         response = check_user(userId=userId)
-        print("Reached here !!!")
         if response.status_code==200:
             api_key = response.json()['key']
         else:
@@ -34,6 +32,9 @@ class taskCreateView(APIView):
         try:
             response = generate(user_request=json.loads(request.body)['user_request'],api_key=api_key)
         except Exception as e:
-            return Response({"Error":str(Exception)},status=status.HTTP_400_BAD_REQUEST)
+            if type(e).__name__=="AuthenticationError":
+                return Response({"message":"Invalid API key"},status=status.HTTP_401_UNAUTHORIZED)
+            else:
+                return Response({"message":type(e).__name__},status = status.HTTP_400_BAD_REQUEST)
         return Response(response,status = status.HTTP_200_OK)
     
