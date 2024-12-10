@@ -107,7 +107,6 @@ def profile_view(request):
             api_key = None
         else:
             return errorView(request,api_response)
-        print(api_key)
         additional_info = response.json()
         if response.status_code==200:
             profile_image = request.user.profile_pic.url if request.user.profile_pic else "https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/Avatar_icon_green.svg/2048px-Avatar_icon_green.svg.png"
@@ -218,7 +217,6 @@ def updatetask(request,taskId):
         res = requests.get(f"{base_url}/data/v2/tasks/{taskId}",headers = headers)
         if res.status_code==200:        
             context = {'task':res.json()['task'],'user_data':getuserData(request)}
-            print(res.json()['task']['due_date'],type(res.json()['task']['due_date']))
             return render(request,'taskView.html',context=context)
         else:
             return errorView(request,res)

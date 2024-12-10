@@ -142,18 +142,14 @@ class APIKeyGetView(APIView):
      def get(self,request):
           if not database_availibility_flag:
                return database_response
-          print("Reached Here !!")
           userId = request.headers.get('userId')
           flag,existing_user = check_user(userId)
           if not flag:
                return existing_user
           key = existing_user.get('apiKey')
-          if not key:
-               return Response({"message":"API key not set please set the same"},status=status.HTTP_400_BAD_REQUEST)
           return Response({'key':key},status=status.HTTP_200_OK)
      def post(self,request):
         userId = request.headers.get('userId')
-        print(userId)
         flag,existing_user = check_user(userId)
         if not flag:
             return existing_user

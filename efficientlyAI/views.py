@@ -25,10 +25,11 @@ class taskCreateView(APIView):
         get_base_path(request)
         userId = request.headers.get('userId')
         response = check_user(userId=userId)
-        if response.status_code==200:
-            api_key = response.json()['key']
-        else:
-            return response
+        api_key = response.json()['key']
+        if response.status_code==200 and not api_key:
+            return Response({"message":"Api key not set please set the same in profile"},status = status.HTTP_400_BAD_REQUEST)
+        elif response.status_code!=200:
+            return Response({"message":response.json()['message']},status = status.HTTP_400_BAD_REQUEST)
         try:
             response = generate(user_request=json.loads(request.body)['user_request'],api_key=api_key)
         except Exception as e:
