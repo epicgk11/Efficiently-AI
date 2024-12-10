@@ -59,9 +59,9 @@ def registration(request):
         try:
             user = CustomUser.objects.create_user(email=email, username=username, password=password1)
             headers = {"userId": email}
-            path = f"{base_url}/data/register/"
+            path = f"{base_url}/data/v2/register/"
             res = requests.post(path, headers=headers)
-            if res.status_code == 200:
+            if res.status_code == 201:
                 login(request, user)
                 return redirect('profileView')
             else:
